@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Battle Royale V3 - Storm & Animations</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; touch-action: none; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        
+        /* UI Layer */
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .hud { pointer-events: auto; position: absolute; color: white; font-weight: bold; text-shadow: 2px 2px 4px black; user-select: none; }
+        
+        /* Health & Storm Bar oben */
+        #top-bars {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 300px; display: flex; flex-direction: column; gap: 5px;
+        }
+        .bar-container { width: 100%; height: 20px; background: rgba(0,0,0,0.6); border: 2px solid #555; }
+        #health-fill { width: 100%; height: 100%; background: #00ff00; transition: width 0.2s; }
+        #storm-timer { text-align: center; color: #ff5555; font-size: 18px; margin-top: 5px; }
+
+        /* Crosshair */
+        #crosshair { 
+            position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; 
+            background: white; border: 2px solid black; border-radius: 50%; 
+            transform: translate(-50%, -50%); pointer-events: none; opacity: 0.8;
+        }
+
+        /* LOGIN SCREEN */
+        #login-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://threejs.org/examples/textures/terrain/grasslight-big.jpg'); /* Simpler Hintergrund */
+            background-size: cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            pointer-events: auto; z-index: 100;
+        }
+        .login-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); }
+        .login-box {
+            position: relative; z-index: 10;
+            background: rgba(20, 20, 20, 0.9); padding: 40px; border-radius: 15px; border: 1px solid #444;
+            display: flex; flex-direction: column; gap: 15px; width: 320px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        h2 { color: white; margin: 0 0 10px 0; text-align: center; text-transform: uppercase; letter-spacing: 2px;}
+        input { padding: 12px; border-radius: 5px; border: 1px solid #555; background: #333; color: white; outline: none;}
+        button { padding: 12px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase;}
+        #btn-login { background: #00e676; color: black; }
+        #btn-register { background: #2979ff; color: white; }
+        #error-msg { color: #ff5252; font-size: 14px; text-align: center; display: none;}
+        #pc-instruction { color: #aaa; text-align: center; font-size: 12px; margin-top: 10px; }
+
+        /* BUILD MENU (Fortnite Style Mobile) */
+        #build-menu {
+            display: flex; position: absolute; bottom: 20px; right: 20px; 
+            gap: 10px; pointer-events: auto; align-items: flex-end;
+        }
+        .build-item {
+            width: 60px; height: 60px; background: rgba(0, 0, 0, 0.6); 
+            border: 3px solid #888; border-radius: 10px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: transform 0.1s; position: relative;
+        }
+        .build-item.selected { border-color: #00FFFF; background: rgba(0, 255, 255, 0.2); transform: scale(1.1); }
+        .build-icon { width: 30px; height: 30px; border: 2px solid white; box-sizing: border-box; }
+        
+        /* Icons mit CSS zeichnen */
+        .icon-wall { background: rgba(255,255,255,0.5); }
+        .icon-floor { height: 10px; margin-top: 10px; background: rgba(255,255,255,0.5); }
+        .icon-ramp { border: none; width: 0; height: 0; border-left: 30px solid transparent; border-bottom: 30px solid rgba(255,255,255,0.5); }
+        .key-hint { position: absolute; top: 2px; left: 4px; font-size: 10px; color: #ccc; }
+
+        /* Mobile Controls */
+        #mobile-controls { display: none; }
+        .touch-zone { position: absolute; pointer-events: auto; }
+        /* Joystick Zone Links */
+        #stick-zone { bottom: 20px; left: 20px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+        /* Action Buttons */
+        .action-btn { 
+            position: absolute; width: 70px; height: 70px; border-radius: 50%; 
+            border: 3px solid rgba(255,255,255,0.5); background: rgba(0,0,0,0.3); color: white; 
+            font-weight: bold; pointer-events: auto; display: flex; align-items: center; justify-content: center;
+        }
+        .action-btn:active { background: rgba(255,255,255,0.4); }
+
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-overlay"></div>
+        <div class="login-box">
+            <h2>Battle Royale</h2>
+            <input type="email" id="inp-email" placeholder="Email">
+            <input type="password" id="inp-password" placeholder="Passwort">
+            <input type="text" id="inp-username" placeholder="Username (nur bei Registrierung)">
+            
+            <button id="btn-login">Einloggen</button>
+            <button id="btn-register">Registrieren</button>
+            <p id="error-msg"></p>
+            <p id="pc-instruction">Klicke ins Spiel, um die Maus zu fangen (PC).</p>
+        </div>
+    </div>
+
+    <div id="crosshair"></div>
+
+    <div id="ui-layer">
+        <div id="top-bars">
+            <div class="bar-container"><div id="health-fill"></div></div>
+            <div id="storm-timer">STORM SHRINKING</div>
+        </div>
+
+        <div style="position:absolute; bottom:20px; left:20px; color:white; font-size:20px;" class="hud">
+            <span id="ammo-count">30</span> | ∞ MATS
+        </div>
+        
+        <div id="build-menu">
+            <div class="build-item" id="b-wall">
+                <div class="key-hint">1</div>
+                <div class="build-icon icon-wall"></div>
+            </div>
+            <div class="build-item" id="b-floor">
+                <div class="key-hint">2</div>
+                <div class="build-icon icon-floor"></div>
+            </div>
+            <div class="build-item" id="b-ramp">
+                <div class="key-hint">3</div>
+                <div class="build-icon icon-ramp"></div>
+            </div>
+            <div class="build-item" id="b-toggle" style="border-color: #ffcc00;">
+                <div class="key-hint">F</div>
+                <span style="font-size:20px;">🔨</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobile-controls">
+        <div id="stick-zone"></div>
+        <div class="action-btn" style="bottom: 120px; right: 30px; background: rgba(255,0,0,0.3);" id="btn-shoot">🔥</div>
+        <div class="action-btn" style="bottom: 40px; right: 100px;" id="btn-jump">⬆️</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+
+    <script type="module" src="game.js"></script>
+</body>
+</html>

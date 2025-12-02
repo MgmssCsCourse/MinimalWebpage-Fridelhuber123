@@ -3,145 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Battle Royale</title>
+    <title>Battle Royale JS</title>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000; touch-action: none; font-family: sans-serif; }
+        body { margin: 0; overflow: hidden; font-family: 'Arial', sans-serif; user-select: none; touch-action: none; -webkit-touch-callout: none; }
         
-        /* Das Overlay für HP und so */
-        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .hud { pointer-events: auto; position: absolute; color: white; font-weight: bold; text-shadow: 2px 2px 4px black; user-select: none; }
-        
-        /* Balken oben */
-        #top-bars {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            width: 300px; display: flex; flex-direction: column; gap: 5px;
-        }
-        .bar-container { width: 100%; height: 20px; background: rgba(0,0,0,0.6); border: 2px solid #555; }
-        #health-fill { width: 100%; height: 100%; background: #00ff00; transition: width 0.2s; }
-        #storm-timer { text-align: center; color: #ff5555; font-size: 18px; margin-top: 5px; }
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        .interactive { pointer-events: auto; }
 
-        /* Fadenkreuz in der Mitte */
-        #crosshair { 
-            position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; 
-            background: white; border: 2px solid black; border-radius: 50%; 
-            transform: translate(-50%, -50%); pointer-events: none; opacity: 0.8;
+        #crosshair {
+            position: absolute; top: 50%; left: 50%; width: 4px; height: 4px;
+            background: white; border: 2px solid black; border-radius: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        /* Login Fenster Styles */
-        #login-screen {
+        #stats-container { position: absolute; bottom: 85px; left: 50%; transform: translateX(-50%); width: 300px; text-align: center; }
+        .bar-wrap { width: 100%; height: 10px; background: #333; border: 1px solid black; margin-top: 2px; }
+        #shield-bar { width: 100%; height: 100%; background: #00aaff; transition: width 0.2s; }
+        #hp-bar { width: 100%; height: 100%; background: #00ff00; transition: width 0.2s; }
+
+        #inventory {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 10px;
+            z-index: 100; pointer-events: auto;
+        }
+        .slot {
+            width: 50px; height: 50px; background: rgba(0,0,0,0.6); border: 2px solid #888;
+            color: white; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: bold; border-radius: 5px; cursor: pointer; text-transform: uppercase;
+            pointer-events: auto;
+        }
+        .slot.active { border-color: #00ff00; background: rgba(0, 255, 0, 0.2); transform: scale(1.1); }
+        .key { font-size: 14px; color: #ffff00; margin-bottom: 2px; }
+
+        #mobile-controls { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+        #joystick-zone {
+            position: absolute; bottom: 50px; left: 50px; width: 120px; height: 120px;
+            background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%; touch-action: none; pointer-events: auto; 
+            z-index: 50;
+        }
+        #joystick-knob {
+            position: absolute; top: 50%; left: 50%; width: 50px; height: 50px;
+            background: rgba(255, 255, 255, 0.5); border-radius: 50%;
+            transform: translate(-50%, -50%); pointer-events: none;
+        }
+
+        .mob-btn {
+            position: absolute; width: 60px; height: 60px;
+            background: rgba(0, 0, 0, 0.5); border: 2px solid white; border-radius: 50%;
+            color: white; font-weight: bold; font-size: 12px;
+            display: flex; align-items: center; justify-content: center; touch-action: none; 
+            pointer-events: auto; user-select: none; z-index: 50;
+        }
+        .mob-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
+
+        #btn-jump { bottom: 180px; right: 30px; background: rgba(0,0,255,0.3); }
+        #btn-shoot { bottom: 80px; right: 120px; width: 80px; height: 80px; background: rgba(255, 0, 0, 0.3); border-color: red; font-size: 16px; }
+        #btn-mode { bottom: 80px; right: 30px; background: rgba(255, 165, 0, 0.3); }
+
+        #build-select { display: none; }
+        #btn-wall { bottom: 260px; right: 30px; border-color: yellow; }
+        #btn-floor { bottom: 260px; right: 100px; border-color: yellow; }
+        #btn-ramp { bottom: 260px; right: 170px; border-color: yellow; }
+
+        #touch-look-zone {
+            position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+            touch-action: none !important; 
+            z-index: 20; 
+            pointer-events: auto;
+            background: rgba(255,0,0,0.02);
+        }
+
+        /* --- DEATH LOBBY SCREEN --- */
+        #lobby-screen {
+            display: none; /* Hidden by default */
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* Hintergrundbild laden */
-            background: url('https://threejs.org/examples/textures/terrain/grasslight-big.jpg'); 
-            background-size: cover;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            pointer-events: auto; z-index: 100;
+            background: linear-gradient(to bottom, #729fcf, #b3d1f0); /* Winter Blue */
+            z-index: 500; pointer-events: auto;
+            text-align: center; font-family: 'Arial Black', sans-serif;
         }
-        .login-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); }
-        .login-box {
-            position: relative; z-index: 10;
-            background: rgba(20, 20, 20, 0.9); padding: 40px; border-radius: 15px; border: 1px solid #444;
-            display: flex; flex-direction: column; gap: 15px; width: 320px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        #lobby-content {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%;
         }
-        h2 { color: white; margin: 0 0 10px 0; text-align: center; text-transform: uppercase; letter-spacing: 2px;}
-        input { padding: 12px; border-radius: 5px; border: 1px solid #555; background: #333; color: white; outline: none;}
-        button { padding: 12px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase;}
-        #btn-login { background: #00e676; color: black; }
-        #btn-register { background: #2979ff; color: white; }
-        #error-msg { color: #ff5252; font-size: 14px; text-align: center; display: none;}
-        #pc-instruction { color: #aaa; text-align: center; font-size: 12px; margin-top: 10px; }
-
-        /* Bau Menü unten rechts */
-        #build-menu {
-            display: flex; position: absolute; bottom: 20px; right: 20px; 
-            gap: 10px; pointer-events: auto; align-items: flex-end;
-        }
-        .build-item {
-            width: 60px; height: 60px; background: rgba(0, 0, 0, 0.6); 
-            border: 3px solid #888; border-radius: 10px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: transform 0.1s; position: relative;
-        }
-        .build-item.selected { border-color: #00FFFF; background: rgba(0, 255, 255, 0.2); transform: scale(1.1); }
-        .build-icon { width: 30px; height: 30px; border: 2px solid white; box-sizing: border-box; }
+        h1 { color: #FFD700; font-size: 40px; text-shadow: 2px 2px 0 #000; margin: 0; padding: 20px; text-transform: uppercase; }
+        .timer-box { background: #000; color: #ff0000; padding: 10px 20px; display: inline-block; font-size: 20px; margin-bottom: 20px; }
         
-        /* Icons selber malen mit CSS */
-        .icon-wall { background: rgba(255,255,255,0.5); }
-        .icon-floor { height: 10px; margin-top: 10px; background: rgba(255,255,255,0.5); }
-        .icon-ramp { border: none; width: 0; height: 0; border-left: 30px solid transparent; border-bottom: 30px solid rgba(255,255,255,0.5); }
-        .key-hint { position: absolute; top: 2px; left: 4px; font-size: 10px; color: #ccc; }
-
-        /* Steuerung fürs Handy */
-        #mobile-controls { display: none; }
-        .touch-zone { position: absolute; pointer-events: auto; }
-        #stick-zone { bottom: 20px; left: 20px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%; }
-        .action-btn { 
-            position: absolute; width: 70px; height: 70px; border-radius: 50%; 
-            border: 3px solid rgba(255,255,255,0.5); background: rgba(0,0,0,0.3); color: white; 
-            font-weight: bold; pointer-events: auto; display: flex; align-items: center; justify-content: center;
+        .lobby-btn {
+            border: none; padding: 15px 40px; font-size: 24px; font-weight: bold;
+            cursor: pointer; margin: 10px; text-transform: uppercase;
         }
-        .action-btn:active { background: rgba(255,255,255,0.4); }
+        #btn-rejoin { background: #FFD700; color: black; box-shadow: 0 4px 0 #b39700; }
+        #btn-rejoin:active { transform: translateY(4px); box-shadow: none; }
+        
+        #btn-home { background: #333; color: white; box-shadow: 0 4px 0 #000; font-size: 18px; }
 
+        @media (hover: none) and (pointer: coarse) {
+            #mobile-controls { display: block; }
+            .slot .key { display: none; } 
+            #stats-container { bottom: 140px; } 
+        }
     </style>
+    
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+                "cannon-es": "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"
+            }
+        }
+    </script>
 </head>
 <body>
-
-    <div id="login-screen">
-        <div class="login-overlay"></div>
-        <div class="login-box">
-            <h2>Battle Royale</h2>
-            <input type="email" id="inp-email" placeholder="Email">
-            <input type="password" id="inp-password" placeholder="Passwort">
-            <input type="text" id="inp-username" placeholder="Dein Name">
-            
-            <button id="btn-login">Einloggen</button>
-            <button id="btn-register">Registrieren</button>
-            <p id="error-msg"></p>
-            <p id="pc-instruction">Klicke ins Spiel damit die Maus weggeht (PC).</p>
-        </div>
-    </div>
-
-    <div id="crosshair"></div>
-
     <div id="ui-layer">
-        <div id="top-bars">
-            <div class="bar-container"><div id="health-fill"></div></div>
-            <div id="storm-timer">STURM KOMMT</div>
-        </div>
-
-        <div style="position:absolute; bottom:20px; left:20px; color:white; font-size:20px;" class="hud">
-            <span id="ammo-count">30</span> | ∞ MATS
+        <div id="crosshair"></div>
+        <div id="stats-container">
+            <div class="bar-wrap"><div id="shield-bar"></div></div>
+            <div class="bar-wrap"><div id="hp-bar"></div></div>
         </div>
         
-        <div id="build-menu">
-            <div class="build-item" id="b-wall">
-                <div class="key-hint">1</div>
-                <div class="build-icon icon-wall"></div>
-            </div>
-            <div class="build-item" id="b-floor">
-                <div class="key-hint">2</div>
-                <div class="build-icon icon-floor"></div>
-            </div>
-            <div class="build-item" id="b-ramp">
-                <div class="key-hint">3</div>
-                <div class="build-icon icon-ramp"></div>
-            </div>
-            <div class="build-item" id="b-toggle" style="border-color: #ffcc00;">
-                <div class="key-hint">F</div>
-                <span style="font-size:20px;">🔨</span>
+        <div id="inventory" class="interactive">
+            <div class="slot active" id="slot-1"><span class="key">1</span>Pick</div>
+            <div class="slot" id="slot-2"><span class="key">2</span>Pump</div>
+            <div class="slot" id="slot-3"><span class="key">3</span>AR</div>
+            <div class="slot" id="slot-4"><span class="key">4</span>SMG</div>
+            <div class="slot" id="slot-5"><span class="key">5</span>Snip</div>
+        </div>
+        
+        <div id="mobile-controls">
+            <div id="touch-look-zone"></div>
+            <div id="joystick-zone" class="interactive"><div id="joystick-knob"></div></div>
+            <div class="mob-btn interactive" id="btn-jump">JUMP</div>
+            <div class="mob-btn interactive" id="btn-shoot">FIRE</div>
+            <div class="mob-btn interactive" id="btn-mode">BUILD</div>
+            <div id="build-select">
+                <div class="mob-btn interactive" id="btn-wall">WALL</div>
+                <div class="mob-btn interactive" id="btn-floor">FLOOR</div>
+                <div class="mob-btn interactive" id="btn-ramp">RAMP</div>
             </div>
         </div>
     </div>
 
-    <div id="mobile-controls">
-        <div id="stick-zone"></div>
-        <div class="action-btn" style="bottom: 120px; right: 30px; background: rgba(255,0,0,0.3);" id="btn-shoot">🔥</div>
-        <div class="action-btn" style="bottom: 40px; right: 100px;" id="btn-jump">⬆️</div>
+    <div id="lobby-screen">
+        <div id="lobby-content">
+            <h1>DU WURDEST ELIMINIERT!</h1>
+            <div class="timer-box">RESPAWN-TIMER: 0:00</div>
+            <br>
+            <button id="btn-home" class="lobby-btn">ZUR LOBBY</button>
+            <button id="btn-rejoin" class="lobby-btn">NEU BEITRETEN</button>
+        </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
-
     <script type="module" src="game.js"></script>
 </body>
 </html>

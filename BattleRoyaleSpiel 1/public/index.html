@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Royale 3D</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+                "cannon-es": "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"
+            }
+        }
+    </script>
+
+    <style>
+        /* --- HIER IST DAS GANZE CSS DRINNE --- */
+
+        /* Fortnite Font Import (Fake) */
+        @import url('https://fonts.googleapis.com/css2?family=Burbank+Big+Condensed+Black&display=swap'); 
+        
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            font-family: 'Segoe UI', sans-serif; 
+            user-select: none; 
+            background-color: #000;
+        }
+
+        /* --- LAYOUT --- */
+        .overlay { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            pointer-events: none; 
+        }
+        .interactive { pointer-events: auto; }
+
+        /* --- LOGIN SCREEN --- */
+        #auth-screen { 
+            /* Ein schönes Hintergrundbild für den Login */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://wallpaperaccess.com/full/2453872.jpg') center/cover;
+            z-index: 2000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            pointer-events: auto; 
+        }
+
+        .login-box { 
+            background: rgba(0, 0, 0, 0.85); 
+            padding: 40px; 
+            border-radius: 15px; 
+            text-align: center; 
+            border: 4px solid #ffff00; 
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.3);
+            transform: skew(-2deg);
+            min-width: 300px;
+        }
+
+        .login-box h1 {
+            color: #ffff00;
+            font-style: italic;
+            text-transform: uppercase;
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-family: sans-serif;
+            text-shadow: 2px 2px black;
+        }
+
+        .login-box input { 
+            display: block; 
+            margin: 15px auto; 
+            padding: 12px; 
+            width: 80%; 
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .login-box button { 
+            background: #ffff00; 
+            border: none; 
+            padding: 15px 40px; 
+            font-weight: 900; 
+            font-size: 18px;
+            cursor: pointer; 
+            text-transform: uppercase; 
+            color: black;
+            transform: skew(-5deg);
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .login-box button:hover {
+            transform: scale(1.05) skew(-5deg);
+            background: white;
+        }
+
+        /* --- LOBBY UI --- */
+        #lobby-ui { 
+            display: none; /* Erst unsichtbar */
+            z-index: 1000; 
+        }
+
+        /* Sidebar Links */
+        .sidebar { 
+            position: absolute; 
+            left: 0; top: 0; bottom: 0; 
+            width: 280px; 
+            background: linear-gradient(90deg, rgba(0,0,0,0.9), transparent); 
+            padding: 30px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            gap: 20px; 
+            pointer-events: auto; 
+        }
+
+        .menu-btn { 
+            background: #ffff00; 
+            border: none; 
+            transform: skew(-10deg); 
+            padding: 15px; 
+            font-size: 24px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            cursor: pointer; 
+            transition: 0.2s;
+            box-shadow: 5px 5px 0px black; 
+            color: black;
+            text-align: center;
+        }
+
+        .menu-btn:hover { 
+            transform: skew(-10deg) translateX(10px); 
+            background: white; 
+        }
+
+        .menu-btn.sub { 
+            background: #ffffff; 
+            font-size: 16px; 
+            padding: 12px;
+        }
+
+        /* Profil & Währung */
+        .top-bar {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 80px;
+            pointer-events: none;
+        }
+
+        .profile-badge { 
+            position: absolute; 
+            top: 20px; 
+            left: 320px; 
+            background: black; 
+            color: white; 
+            padding: 10px 30px; 
+            font-weight: bold; 
+            font-size: 20px;
+            transform: skew(-10deg); 
+            border-left: 8px solid #00aaff; 
+        }
+
+        .currency-box { 
+            position: absolute; 
+            top: 20px; 
+            right: 30px; 
+            background: rgba(0,0,0,0.8); 
+            padding: 10px 20px; 
+            color: #ffd700; 
+            font-weight: bold; 
+            font-size: 24px; 
+            border-radius: 5px; 
+            border-bottom: 3px solid #ffd700;
+        }
+
+        /* --- IN-GAME HUD --- */
+        #game-hud { display: none; }
+        
+        .hp-container {
+            position: absolute; bottom: 30px; left: 30px;
+            width: 300px;
+            background: rgba(0,0,0,0.5);
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .hp-bar-fill {
+            height: 20px;
+            width: 100%;
+            background: #00ff00;
+            transition: width 0.2s;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="auth-screen" class="overlay">
+        <div class="login-box">
+            <h1>Battle Royale JS</h1>
+            <input type="email" id="email" placeholder="Email Adresse">
+            <input type="password" id="password" placeholder="Passwort">
+            <button id="btn-login">ANMELDEN / STARTEN</button>
+            <p id="auth-msg" style="color:red; font-size:12px; margin-top:10px;"></p>
+        </div>
+    </div>
+
+    <div id="lobby-ui" class="overlay">
+        <div class="profile-badge" id="username-display">SPIELER</div>
+        
+        <div class="currency-box">
+            V-COINS: <span id="coin-display">0</span>
+        </div>
+
+        <div class="sidebar">
+            <button class="menu-btn" id="btn-play-br">BATTLE ROYALE</button>
+            <button class="menu-btn" id="btn-play-dm">DEATHMATCH</button>
+            <div style="height: 20px;"></div>
+            <button class="menu-btn sub" id="btn-locker">SPIND (SKINS)</button>
+            <button class="menu-btn sub" id="btn-shop">ITEM SHOP</button>
+        </div>
+    </div>
+
+    <div id="game-hud" class="overlay">
+        <div class="hp-container">
+            <div class="hp-bar-fill" id="hud-hp-bar"></div>
+        </div>
+        <div style="position: absolute; top:50%; left:50%; width:4px; height:4px; background:white; transform:translate(-50%,-50%); border:1px solid black;"></div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <script src="/socket.io/socket.io.js"></script> 
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/game.js"></script>
+</body>
+</html>

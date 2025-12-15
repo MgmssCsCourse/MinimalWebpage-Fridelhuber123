@@ -1,0 +1,65 @@
+/* Ganz einfaches Styling */
+
+body {
+    background-color: #eeeeee; /* Hellgrau */
+    font-family: Arial, sans-serif;
+}
+
+.main-box {
+    width: 800px;
+    background-color: white;
+    margin: 0 auto; /* Zentriert die Box */
+    padding: 20px;
+    border: 2px solid black;
+}
+
+h1 {
+    text-align: center;
+    color: red;
+    text-decoration: underline;
+}
+
+h2 {
+    color: darkgreen;
+}
+
+.menu {
+    text-align: center;
+    background-color: #ffffcc; /* Hellgelb */
+    padding: 10px;
+    border: 1px dashed orange;
+}
+
+.my-button {
+    background-color: red;
+    color: white;
+    padding: 10px;
+    margin: 5px;
+    text-decoration: none; /* Unterstrich weg */
+    display: inline-block;
+}
+
+.my-button:hover {
+    background-color: darkred;
+}
+
+.chapter-box {
+    margin-top: 30px;
+    padding-top: 10px;
+    border-top: 5px solid green;
+}
+
+.info {
+    background-color: #f0f8ff; /* AliceBlue Farbe */
+    padding: 15px;
+}
+
+ul {
+    font-weight: bold;
+}
+
+.go-up {
+    display: block;
+    margin-top: 10px;
+    color: blue;
+}

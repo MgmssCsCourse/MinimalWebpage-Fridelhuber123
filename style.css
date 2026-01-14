@@ -1,167 +1,152 @@
-/* --- General Styles & Variables --- */
-:root {
-    /* Defining a color palette for consistent use */
-    --primary-color: #8b0000;   /* Deep Christmas Red */
-    --secondary-color: #006400; /* Dark Forest Green */
-    --accent-color: #d4af37;    /* Gold */
-    --bg-dark: #2c3e50;         /* Dark background for the body */
-    --bg-light: #fdfbf7;        /* creamy paper-like background for content */
-    --text-dark: #333;
-}
-
+/* GRUNDLAGEN */
 body {
-    font-family: 'Georgia', serif; /* Using a serif font fits the classic book feel */
-    background-color: var(--bg-dark);
+    background-color: #2c3e50; /* Dunkelblau/Grau */
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: #333;
     margin: 0;
     padding: 20px;
-    color: var(--text-dark);
 }
 
-/* The main white box in the middle */
-.container {
-    max-width: 900px; /* Restricts width on large screens */
-    margin: 0 auto;   /* Centers the container horizontally */
-    background-color: var(--bg-light);
+.main-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ecf0f1; /* Helles Grau */
     padding: 30px;
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Adds a nice shadow drop */
-    border: 3px solid var(--accent-color); /* Gold border */
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
-/* --- Header Section --- */
-.main-header {
+header {
     text-align: center;
-    border-bottom: 2px solid var(--primary-color);
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
-.main-header h1 {
-    color: var(--primary-color);
-    font-size: 3em;
-    margin-bottom: 10px;
+header h1 {
+    color: #c0392b; /* Rot */
     text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: 2.5em;
+    margin-bottom: 5px;
 }
 
-.subtitle {
-    font-style: italic;
-    color: var(--secondary-color);
-    font-size: 1.2em;
-}
-
-/* --- Navigation Menu (Using Flexbox) --- */
-.navigation-section h2 {
+/* --- STEP 1: BUTTONS FÜR CHARAKTERE --- */
+.character-select {
     text-align: center;
-    font-size: 1.2em;
-    color: #666;
+    margin-bottom: 40px;
 }
 
-/* This container uses Flexbox to arrange buttons in a row */
+.char-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Abstand zwischen Buttons */
+    flex-wrap: wrap;
+}
+
+.big-btn {
+    text-decoration: none;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: transform 0.2s; /* Animation */
+}
+
+.big-btn:hover {
+    transform: scale(1.05); /* Werden größer beim Drüberfahren */
+    opacity: 0.9;
+}
+
+/* Verschiedene Farben für die Charaktere */
+.scrooge-btn { background-color: #2c3e50; border: 2px solid #c0392b; }
+.ghost-btn { background-color: #7f8c8d; }
+.cratchit-btn { background-color: #27ae60; }
+
+/* --- STEP 2: SCROOGE BEREICH --- */
+.profile-section {
+    padding-top: 20px;
+}
+
+.profile-header {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 5px solid #c0392b;
+}
+
+/* Das Menü für die Kapitel */
 .chapter-nav {
     display: flex;
-    justify-content: center; /* Centers the buttons */
-    flex-wrap: wrap; /* Allows buttons to wrap to next line on small screens */
-    gap: 15px; /* Space between buttons */
-    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-/* Styling the individual navigation buttons */
-.nav-btn {
-    text-decoration: none; /* Removes underline from links */
-    background-color: var(--secondary-color);
+.chapter-nav a {
+    text-decoration: none;
+    color: #333;
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+
+.chapter-nav a:hover {
+    background-color: #c0392b;
     color: white;
-    padding: 12px 20px;
-    border-radius: 30px; /* Makes buttons oval */
-    font-weight: bold;
-    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-    border: 2px solid var(--accent-color);
 }
 
-/* Hover effect when mouse is over the button */
-.nav-btn:hover {
-    background-color: var(--primary-color);
-    box-shadow: 0 5px 15px rgba(139, 0, 0, 0.4);
+/* --- KARTEN DESIGN --- */
+.card {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.divider {
-    border: 0;
-    height: 1px;
-    background: var(--accent-color);
-    margin: 40px 0;
-}
-
-/* --- Chapter Content Blocks --- */
-.chapter-block {
-    margin-bottom: 50px; /* Space between chapters */
-    background-color: #fff;
-    padding: 25px;
-    border-left: 5px solid var(--primary-color); /* Red line on the left */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.chapter-block h3 {
-    color: var(--primary-color);
-    font-size: 1.8em;
+.card h3 {
     margin-top: 0;
+    color: #2c3e50;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
 }
 
-/* Using Flexbox here to put Character list and Description side-by-side */
-.chapter-content {
-    display: flex;
-    gap: 30px;
+/* Farbige Boxen für die Emotionen */
+.status-box {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.9em;
+    margin-bottom: 10px;
 }
 
-/* Left side: Character List styling */
-.char-list {
-    flex: 1; /* Takes up 1 part of space */
-    background-color: #f4f4f4;
-    padding: 15px;
-    border-radius: 5px;
-    min-width: 200px;
+.bad { background-color: #c0392b; }      /* Rot */
+.neutral { background-color: #f39c12; }  /* Orange */
+.growing { background-color: #8e44ad; }  /* Lila */
+.scared { background-color: #2c3e50; }   /* Schwarz */
+.good { background-color: #27ae60; }     /* Grün */
+
+/* Sonstiges */
+.back-top {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #7f8c8d;
+    text-decoration: none;
 }
 
-.char-list h4, .scrooge-state h4 {
-    color: var(--secondary-color);
-    margin-top: 0;
+.back-top:hover {
+    color: #c0392b;
 }
 
-.char-list ul {
-    padding-left: 20px;
-}
-
-.char-list li {
-    margin-bottom: 5px;
-}
-
-/* Right side: Scrooge Description styling */
-.scrooge-state {
-    flex: 2; /* Takes up 2 parts of space (wider than char-list) */
-}
-
-.scrooge-state p {
-    line-height: 1.6; /* Makes text easier to read */
-    font-size: 1.1em;
-}
-
-/* --- Footer --- */
 footer {
     text-align: center;
-    font-size: 0.9em;
-    color: #777;
-    margin-top: 40px;
-}
-
-/* --- Responsive Tweak for smaller screens --- */
-/* If screen is smaller than 768px, stack content instead of side-by-side */
-@media (max-width: 768px) {
-    .chapter-content {
-        flex-direction: column;
-    }
-    
-    .nav-btn {
-        width: 100%; /* Full width buttons on mobile */
-        text-align: center;
-    }
+    margin-top: 50px;
+    font-size: 0.8em;
+    color: #bdc3c7;
 }

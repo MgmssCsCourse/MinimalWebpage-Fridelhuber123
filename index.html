@@ -1,104 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>A Christmas Charol - School Project</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrooge's Journey - A Christmas Carol</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="main-box">
-        <h1>A Christmas Charol</h1>
-        <p>This is a website about the book from Charles Dickens. Here you can see the story of Scrooge.</p>
+    <div class="container">
 
-        <div class="menu">
-            <h3>Choose a Chapter:</h3>
-            <a href="#stave1" class="my-button">Stave 1: Marley's Ghost</a>
-            <a href="#stave2" class="my-button">Stave 2: The First Spirrit</a>
-            <a href="#stave3" class="my-button">Stave 3: The Second Spirrit</a>
-            <a href="#stave4" class="my-button">Stave 4: The Last Spirrit</a>
-            <a href="#stave5" class="my-button">Stave 5: The End</a>
-        </div>
+        <header class="main-header">
+            <h1>A Christmas Carol</h1>
+            <p class="subtitle">The Evolution of Ebenezer Scrooge</p>
+        </header>
 
-        <hr>
+        <section class="navigation-section">
+            <h2>Select a Chapter to see Scrooge's State:</h2>
+            <nav class="chapter-nav">
+                <a href="#stave1" class="nav-btn">Stave 1: The Miser</a>
+                <a href="#stave2" class="nav-btn">Stave 2: The Past</a>
+                <a href="#stave3" class="nav-btn">Stave 3: The Present</a>
+                <a href="#stave4" class="nav-btn">Stave 4: The Future</a>
+                <a href="#stave5" class="nav-btn">Stave 5: The New Man</a>
+            </nav>
+        </section>
 
-        <div id="stave1" class="chapter-box">
-            <h2>Stave 1: Marley's Ghost</h2>
-            <div class="info">
-                <h4>Characters:</h4>
-                <ul>
-                    <li>Ebenezer Scrooge</li>
-                    <li>Bob Cratchit</li>
-                    <li>Fred (nephew)</li>
-                    <li>Jacob Marley</li>
-                </ul>
-                <h4>Scrooge's Change:</h4>
-                <p>At the start Scrooge is very mean. He likes money and hates people. He says "Humbug" to Christmas. When he sees Marley he is scared but he dont want to belive it is real.</p>
-            </div>
-            <a href="#" class="go-up">Go back up</a>
-        </div>
+        <hr class="divider">
 
-        <div id="stave2" class="chapter-box">
-            <h2>Stave 2: The Ghost of Christmas Past</h2>
-            <div class="info">
-                <h4>Characters:</h4>
-                <ul>
-                    <li>Ghost of Past</li>
-                    <li>Little Fan</li>
-                    <li>Fezziwig</li>
-                    <li>Belle</li>
-                </ul>
-                <h4>Scrooge's Change:</h4>
-                <p>Scrooge sees himself as a little boy alone at school. He feels sad. Then he sees Belle breaking up with him because he loved money to much. He starts to regret things.</p>
-            </div>
-            <a href="#" class="go-up">Go back up</a>
-        </div>
+        <main class="content-section">
 
-        <div id="stave3" class="chapter-box">
-            <h2>Stave 3: The Ghost of Christmas Present</h2>
-            <div class="info">
-                <h4>Characters:</h4>
-                <ul>
-                    <li>Ghost of Present</li>
-                    <li>Bob Cratchit family</li>
-                    <li>Tiny Tim</li>
-                </ul>
-                <h4>Scrooge's Change:</h4>
-                <p>Scrooge sees Tiny Tim is sick. The Ghost tells him Tim will die if nothing change. Scrooge feels verry bad and asks if Tim can live. He is learning to care about others.</p>
-            </div>
-            <a href="#" class="go-up">Go back up</a>
-        </div>
+            <article id="stave1" class="chapter-block">
+                <h3>Stave 1: Marley's Ghost</h3>
+                <div class="chapter-content">
+                    <div class="char-list">
+                        <h4>Key Characters Here</h4>
+                        <ul>
+                            <li>Scrooge</li>
+                            <li>Bob Cratchit</li>
+                            <li>Fred</li>
+                            <li>Marley's Ghost</li>
+                        </ul>
+                    </div>
+                    <div class="scrooge-state">
+                        <h4>Scrooge's Emotional State</h4>
+                        <p>At the beginning, Scrooge is cold, tight-fisted, and solitary as an oyster. He aggressively rejects Christmas cheer ("Humbug!"). When faced with Marley's ghost, his wall of disbelief begins to crack, introducing fear for the first time.</p>
+                    </div>
+                </div>
+            </article>
 
-        <div id="stave4" class="chapter-box">
-            <h2>Stave 4: The Ghost of Christmas Yet to Come</h2>
-            <div class="info">
-                <h4>Characters:</h4>
-                <ul>
-                    <li>The dark Phantom</li>
-                    <li>Business men</li>
-                    <li>Dead Scrooge (in grave)</li>
-                </ul>
-                <h4>Scrooge's Change:</h4>
-                <p>Scrooge is terified. He sees his own grave and nobody is sad that he died. He wants to change his life now. He promisses to keep Christmas in his heart.</p>
-            </div>
-            <a href="#" class="go-up">Go back up</a>
-        </div>
+            <article id="stave2" class="chapter-block">
+                <h3>Stave 2: The Ghost of Christmas Past</h3>
+                <div class="chapter-content">
+                    <div class="char-list">
+                        <h4>Key Characters Here</h4>
+                        <ul>
+                            <li>Ghost of Past</li>
+                            <li>Young Scrooge</li>
+                            <li>Fezziwig</li>
+                            <li>Belle</li>
+                        </ul>
+                    </div>
+                    <div class="scrooge-state">
+                        <h4>Scrooge's Emotional State</h4>
+                        <p>Scrooge is forced to relive his memories. He feels nostalgia seeing his old boss Fezziwig and deep regret when watching his fiancée Belle leave him because of his greed. He begins to show emotion, crying slightly.</p>
+                    </div>
+                </div>
+            </article>
 
-        <div id="stave5" class="chapter-box">
-            <h2>Stave 5: The End</h2>
-            <div class="info">
-                <h4>Characters:</h4>
-                <ul>
-                    <li>Scrooge (Happy)</li>
-                    <li>Tiny Tim</li>
-                    <li>The Cratchits</li>
-                </ul>
-                <h4>Scrooge's Change:</h4>
-                <p>Scrooge is a new man. He gives money to the poor and buys a turkey. He becomes a good frend to Tiny Tim. He is full of happyness and laughs a lot.</p>
-            </div>
-            <a href="#" class="go-up">Go back up</a>
-        </div>
+            <article id="stave3" class="chapter-block">
+                <h3>Stave 3: The Ghost of Christmas Present</h3>
+                <div class="chapter-content">
+                    <div class="char-list">
+                        <h4>Key Characters Here</h4>
+                        <ul>
+                            <li>Ghost of Present</li>
+                            <li>Tiny Tim</li>
+                            <li>The Cratchit Family</li>
+                            <li>Fred's Party Guests</li>
+                        </ul>
+                    </div>
+                    <div class="scrooge-state">
+                        <h4>Scrooge's Emotional State</h4>
+                        <p>Scrooge sees the joy of Christmas in others, despite their poverty. He feels genuine concern when he learns Tiny Tim might die. He also sees people mocking him at his nephew's party. He is learning empathy and feeling shame.</p>
+                    </div>
+                </div>
+            </article>
 
-    </div>
+            <article id="stave4" class="chapter-block">
+                <h3>Stave 4: The Ghost of Christmas Yet to Come</h3>
+                <div class="chapter-content">
+                    <div class="char-list">
+                        <h4>Key Characters Here</h4>
+                        <ul>
+                            <li>The Silent Phantom</li>
+                            <li>Businessmen</li>
+                            <li>Thieves</li>
+                            <li>Dead Scrooge</li>
+                        </ul>
+                    </div>
+                    <div class="scrooge-state">
+                        <h4>Scrooge's Emotional State</h4>
+                        <p>This is the climax of his fear. He sees that nobody mourns his death; they only care about his money. Seeing his own neglected gravestone terrifies him into a desperate desire to change his fate. He is fully humbled.</p>
+                    </div>
+                </div>
+            </article>
 
-</body>
+            <article id="stave5" class="chapter-block">
+                <h3>Stave 5: The End of It</h3>
+                <div class="chapter-content">
+                    <div class="char-list">
+                        <h4>Key Characters Here</h4>
+                        <ul>
+                            <li>Redeemed Scrooge</li>
+                            <li>The Turkey Boy</li>
+                            <li>Everyone he meets</li>
+                        </ul>
+                    </div>
+                    <div class="scrooge-state">
+                        <h4>Scrooge's Emotional State</h4>
+                        <p>Scrooge wakes up reborn. He is giddy with happiness, generous (buying the prize turkey), and reconnects with his family. He becomes a "second father" to Tiny Tim and keeps Christmas in his heart all year round.</p>
+                    </div>
+                </div>
+            </article>
+
+        </main>
+    </div> </body>
 </html>

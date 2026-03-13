@@ -1,118 +1,357 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>A Christmas Carol - Character Analysis</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Republica Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --bg: #050a14; --panel: rgba(13, 22, 35, 0.95); --border: rgba(0, 242, 255, 0.3); --neon: #00f2ff; --text: #ffffff; --text-dim: #8ca0b8; --danger: #ff2a6d; --warning: #ff9f1c; --success: #05ffa1; --team: #3b82f6; --refund: #a855f7; }
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; background-color: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
+        body::before { content: ""; position: fixed; inset: 0; background: url('3d.png') no-repeat center center; background-size: min(60vmin, 700px); opacity: 0.15; z-index: -1; pointer-events: none; }
+        #toast-container { position: absolute; top: 20px; right: 20px; z-index: 2000; }
+        .toast { background: rgba(0,0,0,0.9); border-left: 4px solid var(--neon); color: white; padding: 15px 20px; margin-bottom: 10px; border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; align-items: center; animation: slideIn 0.3s ease-out; font-weight: bold; }
+        .toast.error { border-left-color: var(--danger); } .toast.success { border-left-color: var(--success); }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .hidden { display: none !important; }
+        .inp { width: 100%; padding: 12px; margin: 8px 0; background: rgba(0,0,0,0.3); border: 1px solid #334155; color: var(--neon); border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 16px; outline: none; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; background: var(--neon); border: none; color: black; font-weight: bold; font-size: 16px; cursor: pointer; border-radius: 4px; font-family: 'Rajdhani', sans-serif; transition: 0.2s; }
+        .btn:hover { box-shadow: 0 0 10px var(--neon); }
+        .mini-btn { background: var(--neon); border: none; padding: 0 15px; font-weight: bold; cursor: pointer; border-radius: 4px; color: black; }
+        #login-screen { position: absolute; inset: 0; z-index: 1000; background: var(--bg); display: flex; justify-content: center; align-items: center; }
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 40px; border-radius: 10px; text-align: center; width: 400px; }
+        #dashboard { display: flex; width: 100%; height: 100%; opacity: 0; transition: 0.3s; }
+        #dashboard.visible { opacity: 1; }
+        .sidebar { width: 80px; background: #080f1c; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 30px; }
+        .nav-icon { font-size: 24px; color: var(--text-dim); margin-bottom: 20px; padding: 15px; border-radius: 8px; cursor: pointer; }
+        .nav-icon.active { color: var(--neon); background: rgba(0, 242, 255, 0.1); }
+        .content { flex: 1; padding: 30px; display: flex; gap: 30px; overflow-y:auto; }
+        .panel-list { width: 350px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; }
+        .panel-detail { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 30px; position: relative; overflow-y: auto; }
+        .panel-full { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; }
+        .player-item { padding: 12px; margin-bottom: 5px; background: rgba(255,255,255,0.03); border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; }
+        .player-item.selected { background: rgba(0, 242, 255, 0.1); border-left-color: var(--neon); }
+        .player-main { display:flex; flex-direction:column; gap:2px; min-width:0; }
+        .player-name { font-weight:700; display:flex; align-items:center; gap:8px; min-width:0; }
+        .player-sub { font-size:12px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-id-badge { background: black; color: #888; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+        .bar-container { width: 100%; background: #222; height: 8px; border-radius: 4px; margin-top: 5px; overflow: hidden; }
+        .bar-val { height: 100%; transition: width 0.3s; }
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .action-card { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border: 1px solid #333; }
+        .action-card span { font-size: 12px; color: #888; font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group { display: flex; gap: 10px; }
+        .danger-zone { border: 1px solid var(--danger); background: rgba(255, 42, 109, 0.05); padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .danger-zone-title { color: var(--danger); font-weight: bold; margin-bottom: 15px; display: block; }
+        .btn-refund { background: var(--refund); color: white; } .btn-red { background: var(--danger); color: white; } .btn-inv { background: rgba(0, 242, 255, 0.15); border: 1px solid rgba(0, 242, 255, 0.35); color: var(--neon); }
+        .ban-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid var(--danger); }
+        
+        #invModal { position: fixed; inset: 0; z-index: 5000; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        #invModal.show { display: flex; }
+        .inv-wrap { width: min(980px, 95vw); height: min(760px, 90vh); background: var(--panel); border: 1px solid rgba(0,242,255,0.3); border-radius: 12px; position: relative; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.9); }
+        .inv-title { position: absolute; top: 16px; left: 0; right: 0; text-align: center; font-size: 26px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--neon); }
+        .inv-topbar { position: absolute; top: 62px; left: 20px; right: 20px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: center; }
+        .inv-search { height: 38px; border-radius: 6px; border: 1px solid #334155; background: rgba(0,0,0,0.5); color: #fff; padding: 0 15px; font-family: 'Rajdhani', sans-serif; font-size: 15px; outline:none; }
+        .inv-search:focus { border-color: var(--neon); }
+        .inv-actions { display:flex; gap:10px; }
+        .inv-btn { border: 1px solid #334155; background: rgba(0,0,0,0.5); color: #fff; padding: 8px 15px; border-radius: 6px; cursor:pointer; font-family: 'Rajdhani', sans-serif; font-weight: 700; transition: 0.2s;}
+        .inv-btn.danger { border-color: rgba(255,42,109,0.45); color: var(--danger); } .inv-btn:hover { background: rgba(255,255,255,0.1); }
+        .inv-info { position: absolute; top: 115px; left: 20px; right: 20px; display:flex; gap:10px; flex-wrap: wrap; color: var(--text-dim); font-weight: 700; }
+        .chip { background: rgba(0, 242, 255, 0.1); border: 1px solid rgba(0, 242, 255, 0.3); border-radius: 6px; padding: 6px 12px; color: var(--neon); font-size: 14px; }
+        
+        .inv-grid { position: absolute; top: 165px; left: 20px; right: 20px; bottom: 20px; background: rgba(5, 10, 20, 0.9); border: 1px solid rgba(0, 242, 255, 0.1); border-radius: 8px; padding: 20px; display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); grid-auto-rows: 140px; gap: 15px; overflow-y: auto; }
+        .inv-grid::-webkit-scrollbar { width: 6px; } .inv-grid::-webkit-scrollbar-thumb { background: rgba(0, 242, 255, 0.5); border-radius: 10px; }
+        
+        .slot { background: linear-gradient(145deg, rgba(20,30,50,0.9), rgba(10,15,25,0.9)); border: 1px solid rgba(51, 65, 85, 0.8); border-radius: 10px; position: relative; overflow: hidden; padding: 15px; display:flex; flex-direction: column; align-items:center; text-align:center; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .slot:hover { border-color: var(--neon); box-shadow: 0 0 15px rgba(0, 242, 255, 0.3); transform: translateY(-3px); }
+        .slot .count { position:absolute; top:8px; right:8px; padding: 3px 8px; border-radius: 6px; background: rgba(0, 242, 255, 0.2); border: 1px solid var(--neon); font-size: 12px; font-weight: bold; color:var(--neon); }
+        .slot .icon { height: 60px; display:flex; align-items:center; justify-content:center; font-size:40px; color: #cbd5e1; margin-bottom: 5px; } 
+        .slot .label { font-size: 14px; font-weight: 700; color: white; width: 100%; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; } 
+        .slot .name { font-size: 11px; color: var(--text-dim); width: 100%; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+    </style>
 </head>
 <body>
+    <div id="toast-container"></div>
+    <div id="statusPill" style="position:fixed;bottom:14px;right:14px;z-index:3000;padding:8px 10px;border-radius:999px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.15);color:#fff;font-weight:700;font-size:12px;backdrop-filter:blur(8px);">API: Prüfe...</div>
 
-    <div class="main-container">
-
-        <header>
-            <h1>A Christmas Carol</h1>
-            <p>Select a Character to analyze their story</p>
-        </header>
-
-        <section class="character-select">
-            <h2>1. Choose a Character:</h2>
-            <div class="char-buttons">
-                <a href="#scrooge-section" class="big-btn scrooge-btn">Ebenezer Scrooge</a>
-                <a href="#ghosts-section" class="big-btn ghost-btn">The Spirits</a>
-                <a href="#cratchit-section" class="big-btn cratchit-btn">The Cratchits</a>
-            </div>
-        </section>
-
-        <hr>
-
-        <div id="scrooge-section" class="profile-section">
-            <div class="profile-header">
-                <h2>Profile: Ebenezer Scrooge</h2>
-                <p>Select a Chapter to see his emotional change:</p>
-                
-                <nav class="chapter-nav">
-                    <a href="#stave1">Stave 1 (The Miser)</a>
-                    <a href="#stave2">Stave 2 (Regret)</a>
-                    <a href="#stave3">Stave 3 (Empathy)</a>
-                    <a href="#stave4">Stave 4 (Fear)</a>
-                    <a href="#stave5">Stave 5 (Redemption)</a>
-                </nav>
-            </div>
-
-            <div id="stave1" class="card">
-                <h3>Stave 1: Marley's Ghost</h3>
-                <div class="status-box bad">
-                    <strong>Emotion:</strong> Cold, Mean, Stubborn
-                </div>
-                <p>Scrooge is at his worst. He hates Christmas ("Humbug!"), refuses to help the poor, and treats his clerk Bob badly. Even when he sees Marley's ghost, he tries not to believe it.</p>
-            </div>
-
-            <div id="stave2" class="card">
-                <h3>Stave 2: The Past</h3>
-                <div class="status-box neutral">
-                    <strong>Emotion:</strong> Sadness, Nostalgia, Regret
-                </div>
-                <p>Scrooge sees himself as a lonely boy. He cries for the first time. He sees Belle breaking up with him because of his greed. He starts to wish he had been nicer.</p>
-            </div>
-
-            <div id="stave3" class="card">
-                <h3>Stave 3: The Present</h3>
-                <div class="status-box growing">
-                    <strong>Emotion:</strong> Guilt, Care, Shame
-                </div>
-                <p>Scrooge sees Tiny Tim and learns he might die. He asks the Spirit "Will he live?". He feels ashamed when he hears his own mean words used against him.</p>
-            </div>
-
-            <div id="stave4" class="card">
-                <h3>Stave 4: The Future</h3>
-                <div class="status-box scared">
-                    <strong>Emotion:</strong> Terror, Desperation
-                </div>
-                <p>Scrooge sees his own neglected grave. He realizes that money cannot buy love. He falls on his knees and promises to change his life if he gets one more chance.</p>
-            </div>
-
-            <div id="stave5" class="card">
-                <h3>Stave 5: The End</h3>
-                <div class="status-box good">
-                    <strong>Emotion:</strong> Joy, Generosity, Love
-                </div>
-                <p>Scrooge wakes up on Christmas morning. He is giddy as a schoolboy! He buys the turkey for Bob, laughs with Fred, and becomes a second father to Tiny Tim.</p>
-            </div>
-            
-            <a href="#" class="back-top">↑ Back to Character Selection</a>
+    <div id="login-screen">
+        <div class="card">
+            <img src="3d.png" onerror="this.onerror=null; this.src='3d.jpg';" style="width:80px; margin-bottom:20px; border-radius:0; border: none; background: transparent; filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));">
+            <h2 style="margin:0; color:white;">Hallo Calin,</h2>
+            <p style="color:var(--text-dim); margin-top:10px; font-size:18px;">das ist mein Fivem Spieler Management System.</p>
+            <button class="btn" onclick="window.enterPanel()" style="margin-top: 25px;">SYSTEM STARTEN</button>
         </div>
-
-        <hr>
-
-        <div id="ghosts-section" class="profile-section">
-            <h2>Profile: The Three Spirits</h2>
-            <div class="card">
-                <ul>
-                    <li><strong>Ghost of Christmas Past:</strong> Looks like a child and an old man. Shows memories.</li>
-                    <li><strong>Ghost of Christmas Present:</strong> A giant, jolly man in a green robe. Shows joy and poverty.</li>
-                    <li><strong>Ghost of Christmas Yet to Come:</strong> A dark phantom who does not speak. Shows death.</li>
-                </ul>
-            </div>
-            <a href="#" class="back-top">↑ Back to Character Selection</a>
-        </div>
-
-        <div id="cratchit-section" class="profile-section">
-            <h2>Profile: The Cratchit Family</h2>
-            <div class="card">
-                <ul>
-                    <li><strong>Bob Cratchit:</strong> Scrooge's clerk. Poor but happy.</li>
-                    <li><strong>Tiny Tim:</strong> Bob's crippled son. He says "God bless us, every one!"</li>
-                    <li><strong>Mrs. Cratchit:</strong> Bob's wife. She doesn't like Scrooge but toasts him anyway.</li>
-                </ul>
-            </div>
-            <a href="#" class="back-top">↑ Back to Character Selection</a>
-        </div>
-
-        <footer>
-            <p>School Project • HTML & CSS Task</p>
-        </footer>
-
     </div>
 
+    <div id="invModal" onclick="if(event.target.id==='invModal') window.closeInventory()">
+      <div class="inv-wrap">
+        <div class="inv-title">SPIELER INVENTAR</div>
+        <div class="inv-topbar">
+          <input id="invOwner" class="inv-search" readonly>
+          <input id="invSearch" class="inv-search" placeholder="Suchen..." oninput="window.refreshInventory()">
+          <div class="inv-actions">
+            <button class="inv-btn" onclick="window.refreshInventory()"><i class="fas fa-sync"></i></button>
+            <button class="inv-btn danger" id="btn-clearinv" data-perm="clearinv" onclick="window.clearInventory(false)"><i class="fas fa-broom"></i> Clear</button>
+            <button class="inv-btn danger" id="btn-clearinv-w" data-perm="clearinv" onclick="window.clearInventory(true)"><i class="fas fa-skull"></i> Clear+W</button>
+            <button class="inv-btn" onclick="window.closeInventory()"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="inv-info"><span class="chip" id="invCash">Cash: 0$</span><span class="chip" id="invBank">Bank: 0$</span><span class="chip" id="invCounts">Slots: 0</span></div>
+        <div class="inv-grid" id="invGrid"></div>
+      </div>
+    </div>
+
+    <div id="dashboard" class="hidden">
+        <div class="sidebar">
+            <img src="3d.png" onerror="this.onerror=null; this.src='3d.jpg';" style="width:50px; border-radius:0; border:none; margin-bottom:30px; filter: drop-shadow(0 0 5px rgba(0, 242, 255, 0.5));">
+            <div class="nav-icon active" onclick="window.switchTab('players', event)" title="Spieler"><i class="fas fa-users"></i></div>
+            <div class="nav-icon" id="nav-bans" data-perm="ban" onclick="window.switchTab('bans', event)" title="Bannliste"><i class="fas fa-user-slash"></i></div>
+            <div style="flex:1"></div>
+            <div class="nav-icon" style="color:var(--danger)" onclick="location.reload()" title="Verlassen"><i class="fas fa-sign-out-alt"></i></div>
+        </div>
+
+        <div id="page-players" class="content">
+            <div class="panel-list">
+                <h3 style="margin-top:0; color:var(--text-dim)">ONLINE SPIELER</h3>
+                <input type="text" id="search" class="inp" placeholder="Spieler suchen..." oninput="window.scheduleRenderList()">
+                <div id="playerList" style="overflow-y:auto; flex:1; margin-top:10px;"></div>
+            </div>
+            <div class="panel-detail">
+                <div id="emptyState" style="text-align:center; padding-top:150px; color:var(--text-dim);">
+                    <i class="fas fa-mouse-pointer" style="font-size: 40px; margin-bottom: 20px;"></i>
+                    <h2>Wähle einen Spieler aus der Liste</h2>
+                </div>
+                <div id="playerDetailContent" class="hidden">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px;">
+                        <div><h1 id="pName" style="margin:0; font-size:36px; color:var(--neon);">Name</h1><span id="pID" class="p-id-badge" style="font-size:16px;">ID: 0</span></div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn" data-perm="spectate" style="background:#8b5cf6; color:white; width:auto; padding:8px 15px;" onclick="window.notify('Nutze F10 Ingame, um live zuzuschauen & Screenshots zu machen!', 'info')"><i class="fas fa-eye"></i> Spectate (Ingame)</button>
+                            <button class="btn btn-inv" id="btn-inv" data-perm="inv" style="width:auto; padding:8px 15px;" onclick="window.openInventory()"><i class="fas fa-box-open"></i> INVENTAR</button>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:30px; margin-bottom:25px;">
+                        <div style="flex:1"><span style="font-size:12px; font-weight:bold; color:var(--success)">LEBEN</span><div class="bar-container"><div id="hpBar" class="bar-val" style="background:var(--success)"></div></div></div>
+                        <div style="flex:1"><span style="font-size:12px; font-weight:bold; color:#0066ff">WESTE</span><div class="bar-container"><div id="armorBar" class="bar-val" style="background:#0066ff"></div></div></div>
+                    </div>
+                    <div class="action-grid">
+                        <button class="btn" id="btn-revive" data-perm="revive" style="background:var(--success); color:black;" onclick="window.sendAction('revive')"><i class="fas fa-heartbeat"></i> WIEDERBELEBEN</button>
+                        <button class="btn btn-refund" id="btn-refund" data-perm="refund" onclick="window.sendAction('refund')"><i class="fas fa-undo"></i> Rückerstattung</button>
+                    </div>
+                    <div class="action-grid">
+                        <div class="action-card" data-perm="giveitem"><span>ITEM GEBEN</span><div class="input-group"><input id="itemName" class="inp" style="margin:0" placeholder="z.B. bread"><input id="itemAmount" type="number" class="inp" style="margin:0; width:70px;" value="1"><button class="mini-btn" onclick="window.sendAction('giveitem')"><i class="fas fa-check"></i></button></div></div>
+                        <div class="action-card" data-perm="givemoney"><span>GELD GEBEN</span><div class="input-group"><select id="moneyType" class="inp" style="margin:0; width:90px;"><option value="cash">Bar</option><option value="bank">Bank</option></select><input id="moneyAmount" type="number" class="inp" style="margin:0" placeholder="Betrag"><button class="mini-btn" onclick="window.sendAction('givemoney')"><i class="fas fa-check"></i></button></div></div>
+                        <div class="action-card" data-perm="setmoney"><span>GELD SETZEN</span><div class="input-group"><select id="setMoneyType" class="inp" style="margin:0; width:90px;"><option value="cash">Bar</option><option value="bank">Bank</option></select><input id="setMoneyAmount" type="number" class="inp" style="margin:0" placeholder="Betrag"><button class="mini-btn" onclick="window.sendAction('setmoney')" style="background:var(--warning);"><i class="fas fa-pen"></i></button></div></div>
+                        <div class="action-card" data-perm="giveweapon"><span>WAFFE GEBEN</span><div class="input-group"><input id="weaponName" class="inp" style="margin:0" placeholder="weapon_pistol"><button class="mini-btn" onclick="window.sendAction('giveweapon')"><i class="fas fa-check"></i></button></div></div>
+                        <div class="action-card" data-perm="visum"><span>EINREISE (VISUM)</span><div class="input-group"><input id="visumAmount" type="number" class="inp" style="margin:0" value="1" placeholder="Anzahl"><button class="mini-btn" style="background:#a855f7; color:white;" onclick="window.sendAction('visum')"><i class="fas fa-passport"></i></button></div></div>
+                        <div class="action-card" data-perm="spawncar"><span>AUTO SPAWNEN (TEMPORÄR)</span><div class="input-group"><input id="spawnCarName" class="inp" style="margin:0" placeholder="z.B. t20"><button class="mini-btn" onclick="window.sendAction('spawncar')"><i class="fas fa-car"></i></button></div></div>
+                        <div class="action-card" data-perm="givecar"><span>AUTO IN GARAGE (GIVECAR)</span><div class="input-group"><input id="carName" class="inp" style="margin:0" placeholder="z.B. t20"><button class="mini-btn" style="background:var(--warning);" onclick="window.sendAction('givecar')"><i class="fas fa-key"></i></button></div></div>
+                    </div>
+                    <div class="danger-zone" id="card-danger" data-perm="ban">
+                        <span class="danger-zone-title"><i class="fas fa-exclamation-triangle"></i> GEFAHRENZONE</span>
+                        <input type="text" id="banReason" class="inp" placeholder="Grund für Bann/Kick..." style="margin:0 0 10px 0; background:rgba(0,0,0,0.5);">
+                        <div style="display:flex; gap:15px; margin-bottom: 15px;"><button class="btn" style="background:orange; color:black; margin:0;" onclick="window.sendAction('kick')">VOM SERVER KICKEN</button></div>
+                        <div style="display:flex; gap:10px;"><select id="banDuration" class="inp" style="margin:0; background:rgba(0,0,0,0.5);"><option value="0">Permanent bannen</option><option value="3600">1 Stunde bannen</option><option value="86400">1 Tag bannen</option><option value="604800">1 Woche bannen</option></select><button class="btn btn-red" style="margin:0; width:150px;" onclick="window.sendAction('ban')">BANNEN</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-bans" class="content hidden">
+            <div class="panel-list" style="width: 100%; flex:1;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2 style="color:var(--danger); margin:0;">BANNLISTE</h2><button class="mini-btn" onclick="window.fetchBans()" style="background:transparent; border:1px solid var(--neon); color:var(--neon); padding:10px;"><i class="fas fa-sync"></i> Aktualisieren</button>
+                </div>
+                <div id="banListContainer" style="overflow-y:auto; flex:1;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GRUNDLEGENDE SETUP & HILFSFUNKTIONEN ---
+        function escapeHtml(str) { return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+        const SERVER_URL = "http://185.117.3.227:30120/admin_pannel_flo";
+        const API_SECRET = "SJHI9=*dvg08";
+
+        // Globale Variablen für FiveM Sync
+        window.allPlayers = []; window.selectedId = null; window.isSyncing = false; window.syncTimer = null; window.invOpen = false;
+        window.lastPlayersDigest = ""; window.searchDebounceTimer = null;
+
+        // --- DASHBOARD START ---
+        // Dies simuliert den Login-Erfolg und lädt das Panel
+        window.enterPanel = () => {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            setTimeout(() => document.getElementById('dashboard').classList.add('visible'), 50);
+            window.startPolling();
+        };
+
+        function getPlayersDigest(players) {
+            try { return JSON.stringify((players || []).map(p => [p.id, p.name, p.health, p.armor, p.isAdmin, p.job])); } catch (_) { return String(Date.now()); }
+        }
+
+        window.scheduleRenderList = () => { clearTimeout(window.searchDebounceTimer); window.searchDebounceTimer = setTimeout(() => window.renderList(), 120); };
+
+        async function fetchWithTimeout(url, options = {}) {
+            const timeoutMs = options.timeoutMs || 8000;
+            const controller = new AbortController(); const id = setTimeout(() => controller.abort(), timeoutMs);
+            try { const r = await fetch(url, { ...options, signal: controller.signal }); clearTimeout(id); return r; } catch(e) { clearTimeout(id); throw e; }
+        }
+
+        async function fetchJsonWithRetry(url, options = {}, retries = 1) {
+            let lastErr;
+            for (let i = 0; i <= retries; i++) {
+                try {
+                    const res = await fetchWithTimeout(url, options);
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    return await res.json();
+                } catch (err) { lastErr = err; if (i < retries) { await new Promise(r => setTimeout(r, 350)); } }
+            }
+            throw lastErr;
+        }
+
+        // --- UI BENACHRICHTIGUNGEN ---
+        window.notify = (msg, type='success') => { const container = document.getElementById('toast-container'); const div = document.createElement('div'); div.className = `toast ${type}`; div.innerHTML = `<span>${window.escapeHtml(msg)}</span>`; container.appendChild(div); setTimeout(() => div.remove(), 3500); };
+
+        // --- FIVEM SYNC LOGIK ---
+        window.syncLoop = async () => {
+            if(window.isSyncing) return; window.isSyncing = true;
+            try { 
+                if (!document.hidden) { 
+                    let url = SERVER_URL + "/sync"; if(window.invOpen && window.selectedId) url += "?inv=" + window.selectedId;
+                    const data = await fetchJsonWithRetry(url, { method: 'GET', timeoutMs: 9000 }, 1);
+                    document.getElementById("statusPill").textContent = "API: online"; document.getElementById("statusPill").style.borderColor = 'rgba(5,255,161,0.35)';
+                    const nextPlayers = data.players || []; const nextDigest = getPlayersDigest(nextPlayers); window.allPlayers = nextPlayers;
+                    
+                    if (nextDigest !== window.lastPlayersDigest) { window.lastPlayersDigest = nextDigest; window.renderList(); }
+                    
+                    if(window.selectedId) { 
+                        const p = window.allPlayers.find(x => x.id == window.selectedId); 
+                        if(!p) window.deselect(); 
+                        else { document.getElementById('hpBar').style.width = (p.health||0) + "%"; document.getElementById('armorBar').style.width = (p.armor||0) + "%"; } 
+                    }
+                    if(window.invOpen && data.inventory && window.selectedId) window.renderInventory(data.inventory);
+                } 
+            } catch(e) { 
+                document.getElementById("statusPill").textContent = "API: offline"; document.getElementById("statusPill").style.borderColor = 'rgba(255,42,109,0.45)'; 
+            }
+            window.isSyncing = false; window.syncTimer = setTimeout(window.syncLoop, 5000);
+        };
+
+        window.startPolling = () => { clearTimeout(window.syncTimer); window.syncLoop(); }; 
+        window.stopPolling = () => { clearTimeout(window.syncTimer); };
+
+        // --- TAB STEUERUNG ---
+        window.switchTab = (tab, ev) => { 
+            document.querySelectorAll('.content').forEach(el => el.classList.add('hidden')); 
+            document.getElementById('page-'+tab).classList.remove('hidden'); 
+            document.querySelectorAll('.nav-icon').forEach(el => el.classList.remove('active')); 
+            if(ev && ev.currentTarget) ev.currentTarget.classList.add('active'); 
+            if(tab === 'bans') window.fetchBans(); 
+        };
+
+        // --- SPIELER LISTE & DETAILS ---
+        window.renderList = () => {
+            const list = document.getElementById('playerList'); const term = (document.getElementById('search').value || "").toLowerCase().trim(); list.innerHTML = "";
+            const sorted = [...window.allPlayers].sort((a, b) => (a.id || 0) - (b.id || 0));
+            sorted.filter(p => { const n = (p.name || "").toLowerCase(); const id = String(p.id || ""); return term === "" || n.includes(term) || id.includes(term); }).forEach(p => {
+                const div = document.createElement('div'); div.className = `player-item ${window.selectedId == p.id ? 'selected' : ''}`;
+                let adminBadge = p.isAdmin ? '<span style="background:var(--team); color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:4px; margin-left:8px; box-shadow: 0 0 8px rgba(59,130,246,0.6);">TEAM</span>' : '';
+                div.innerHTML = `<div class="player-main"><div class="player-name">${window.escapeHtml(p.name)} ${adminBadge}</div><div class="player-sub">${window.escapeHtml(p.job || "Unbekannt")} | HP ${Number(p.health || 0)} | Armor ${Number(p.armor || 0)}</div></div><span class="p-id-badge">${p.id}</span>`;
+                div.onclick = () => window.selectPlayer(p); list.appendChild(div);
+            });
+        };
+
+        window.selectPlayer = p => { 
+            window.selectedId = p.id; window.renderList(); 
+            document.getElementById('emptyState').classList.add('hidden'); 
+            document.getElementById('playerDetailContent').classList.remove('hidden'); 
+            document.getElementById('pName').innerHTML = `${window.escapeHtml(p.name)} <span class="p-id" style="font-size:16px;">ID: ${p.id}</span>`; 
+            document.getElementById('hpBar').style.width = (p.health||0) + "%"; 
+            document.getElementById('armorBar').style.width = (p.armor||0) + "%"; 
+        };
+        
+        window.deselect = () => { 
+            window.selectedId = null; 
+            document.getElementById('emptyState').classList.remove('hidden'); 
+            document.getElementById('playerDetailContent').classList.add('hidden'); 
+            window.closeInventory(); window.renderList(); 
+        };
+
+        // --- INVENTAR SYSTEM ---
+        window.openInventory = () => { if(!window.selectedId) return window.notify("Kein Spieler ausgewählt","error"); window.invOpen = true; document.getElementById('invModal').classList.add('show'); document.getElementById('invOwner').value = `Spieler ID: ${window.selectedId}`; window.refreshInventory(); }; 
+        window.closeInventory = () => { window.invOpen = false; document.getElementById('invModal').classList.remove('show'); }; 
+        window.refreshInventory = () => { clearTimeout(window.syncTimer); window.syncLoop(); };
+
+        window.renderInventory = data => {
+            document.getElementById('invCash').innerText = `Cash: ${data.money?.cash ?? 0}$`; document.getElementById('invBank').innerText = `Bank: ${data.money?.bank ?? 0}$`;
+            const search = (document.getElementById('invSearch').value || "").toLowerCase(); const items = Array.isArray(data.items) ? data.items : []; const weapons = Array.isArray(data.weapons) ? data.weapons : [];
+            const merged = items.map(x=>({kind:"item", ...x})).concat(weapons.map(w=>({kind:"weapon", name:w.name, label:w.label||w.name, count:(w.ammo||0), ammo:(w.ammo||0)})));
+            const filtered = merged.filter(it => (`${it.label||""} ${it.name||""}`).toLowerCase().includes(search));
+            document.getElementById('invCounts').innerText = `Slots: ${filtered.length}`; const grid = document.getElementById('invGrid'); grid.innerHTML = "";
+            if(filtered.length === 0){ grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color: var(--text-dim); padding: 30px 0; font-size:18px;">Keine Items gefunden</div>`; return; }
+            filtered.forEach(it=>{ 
+                const div=document.createElement('div'); div.className="slot"; const countText = it.kind==="weapon" ? `${it.ammo||0} Ammo` : `x${it.count||0}`; const iconHtml = it.kind==="weapon" ? '<i class="fas fa-crosshairs"></i>' : '<i class="fas fa-box-open"></i>'; 
+                div.innerHTML = `<div class="count">${window.escapeHtml(countText)}</div><div class="icon">${iconHtml}</div><div class="label">${window.escapeHtml(it.label||it.name)}</div><div class="name">${window.escapeHtml(it.name||"")}</div>`; grid.appendChild(div); 
+            });
+        };
+
+        window.clearInventory = async (withWeapons) => { 
+            if(!window.selectedId) return; if(!confirm(withWeapons ? "Inventar + Waffen wirklich clearen?" : "Inventar wirklich clearen?")) return; 
+            const url = SERVER_URL + "/command?secret=" + encodeURIComponent(API_SECRET) + "&adminName=Calin&action=clearinv&targetId=" + window.selectedId + "&clearWeapons=" + (withWeapons ? "true" : "false");
+            try { const res = await fetchWithTimeout(url, { method: 'GET' }); if(res.ok) window.notify("Clear gesendet","success"); else window.notify("Clear fehlgeschlagen","error"); setTimeout(()=>window.refreshInventory(), 500); } catch(e) { window.notify("Fehler","error"); } 
+        };
+
+        // --- AKTIONEN AN FIVEM SENDEN ---
+        window.sendAction = async action => {
+            if(!window.selectedId) return; 
+            let url = SERVER_URL + "/command?secret=" + encodeURIComponent(API_SECRET) + "&adminName=Calin&action=" + encodeURIComponent(action) + "&targetId=" + window.selectedId;
+            if(action === 'giveitem') { url += "&item=" + encodeURIComponent(document.getElementById('itemName').value) + "&amount=" + encodeURIComponent(document.getElementById('itemAmount').value); }
+            if(action === 'givemoney') { url += "&amount=" + encodeURIComponent(document.getElementById('moneyAmount').value) + "&account=" + encodeURIComponent(document.getElementById('moneyType').value); }
+            if(action === 'setmoney') { url += "&amount=" + encodeURIComponent(document.getElementById('setMoneyAmount').value) + "&account=" + encodeURIComponent(document.getElementById('setMoneyType').value); }
+            if(action === 'giveweapon') { url += "&item=" + encodeURIComponent(document.getElementById('weaponName').value); }
+            if(action === 'visum') { url += "&amount=" + encodeURIComponent(document.getElementById('visumAmount').value); }
+            if(action === 'givecar') { url += "&model=" + encodeURIComponent(document.getElementById('carName').value); }
+            if(action === 'spawncar') { url += "&model=" + encodeURIComponent(document.getElementById('spawnCarName').value); }
+            if(action === 'ban' || action === 'kick') { url += "&reason=" + encodeURIComponent(document.getElementById('banReason').value || "Gekickt durch Admin Panel"); }
+            if(action === 'ban') { url += "&duration=" + encodeURIComponent(document.getElementById('banDuration').value); }
+            
+            window.notify("Wird ausgeführt...", "success"); 
+            try { 
+                const res = await fetchWithTimeout(url, { method: 'GET' }); 
+                if(res.ok) window.notify("Erfolgreich!", 'success'); 
+                else window.notify("Fehler", "error"); 
+                if(action === "ban") setTimeout(window.fetchBans, 700); 
+            } catch(e) { window.notify("Verbindungsfehler", "error"); }
+        };
+
+        // --- BANNSYSTEM ---
+        window.fetchBans = async () => { 
+            try { 
+                const res = await fetchWithTimeout(SERVER_URL + "/bans?secret=" + encodeURIComponent(API_SECRET), { cache:"no-store" }); 
+                const bans = await res.json(); 
+                const list = document.getElementById('banListContainer'); list.innerHTML = ""; 
+                if(!bans || bans.length === 0) { list.innerHTML = "<div style='text-align:center; color:#888; margin-top:50px;'>Keine aktiven Banns</div>"; return; } 
+                
+                bans.forEach(b => { 
+                    let expireText = "Permanent"; if(b.expire != 0) { const date = new Date(b.expire * 1000); expireText = "Bis: " + date.toLocaleDateString() + " " + date.toLocaleTimeString(); } 
+                    const div = document.createElement('div'); div.className = "ban-item"; 
+                    div.innerHTML = `<div style="color:white; margin:0;"><h4 style="margin:0;">${window.escapeHtml(b.name||"")} <small style="color:var(--text-dim);">(${window.escapeHtml(b.license||"")})</small></h4><small style="color:var(--text-dim);">Grund: ${window.escapeHtml(b.reason||"")} | ${expireText}</small></div><button class="mini-btn" onclick="window.unban('${window.escapeHtml(b.license||"")}')">FREIGEBEN</button>`; 
+                    list.appendChild(div); 
+                }); 
+            } catch(e) { window.notify("Konnte Bannliste nicht laden", "error"); } 
+        };
+
+        window.unban = async license => { 
+            if(!confirm("Wirklich entbannen?")) return; 
+            const url = SERVER_URL + "/command?secret=" + encodeURIComponent(API_SECRET) + "&action=unban&license=" + encodeURIComponent(license); 
+            try { 
+                const res = await fetchWithTimeout(url, { method: 'GET' }); 
+                if(res.ok) window.notify("Entbannt","success"); else window.notify("Fehler","error"); 
+                setTimeout(window.fetchBans, 700); 
+            } catch(e) { window.notify("Fehler","error"); } 
+        };
+    </script>
 </body>
 </html>

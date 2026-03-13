@@ -2,11 +2,11 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Republica Admin Panel</title>
+    <title>Republica Admin Panel - Showcase</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    
+
     <style>
         :root { --bg: #050a14; --panel: rgba(13, 22, 35, 0.95); --border: rgba(0, 242, 255, 0.3); --neon: #00f2ff; --text: #ffffff; --text-dim: #8ca0b8; --danger: #ff2a6d; --warning: #ff9f1c; --success: #05ffa1; --team: #3b82f6; --refund: #a855f7; }
         body { margin: 0; font-family: 'Rajdhani', sans-serif; background-color: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
@@ -20,8 +20,13 @@
         .btn { width: 100%; padding: 12px; background: var(--neon); border: none; color: black; font-weight: bold; font-size: 16px; cursor: pointer; border-radius: 4px; font-family: 'Rajdhani', sans-serif; transition: 0.2s; }
         .btn:hover { box-shadow: 0 0 10px var(--neon); }
         .mini-btn { background: var(--neon); border: none; padding: 0 15px; font-weight: bold; cursor: pointer; border-radius: 4px; color: black; }
-        #login-screen { position: absolute; inset: 0; z-index: 1000; background: var(--bg); display: flex; justify-content: center; align-items: center; }
-        .card { background: var(--panel); border: 1px solid var(--border); padding: 40px; border-radius: 10px; text-align: center; width: 400px; }
+        
+        #login-screen { position: absolute; inset: 0; z-index: 1000; background: var(--bg); display: flex; justify-content: center; align-items: center; padding: 20px; }
+        /* Die Karte wurde breiter gemacht, damit der Erklärtext gut lesbar ist */
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 40px; border-radius: 10px; text-align: center; width: 100%; max-width: 650px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .explanation-box { background: rgba(0,0,0,0.4); border: 1px solid #334155; border-radius: 8px; padding: 20px; text-align: left; margin: 25px 0; color: var(--text-dim); font-size: 17px; line-height: 1.5; }
+        .explanation-box strong { color: var(--neon); }
+
         #dashboard { display: flex; width: 100%; height: 100%; opacity: 0; transition: 0.3s; }
         #dashboard.visible { opacity: 1; }
         .sidebar { width: 80px; background: #080f1c; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 30px; }
@@ -70,18 +75,34 @@
         .slot .icon { height: 60px; display:flex; align-items:center; justify-content:center; font-size:40px; color: #cbd5e1; margin-bottom: 5px; } 
         .slot .label { font-size: 14px; font-weight: 700; color: white; width: 100%; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; } 
         .slot .name { font-size: 11px; color: var(--text-dim); width: 100%; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+
+        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .perm-grid label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ddd; cursor: pointer; transition: 0.2s;}
+        .perm-grid input { width: 16px; height: 16px; cursor: pointer; }
+        
+        .todo-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
-    <div id="statusPill" style="position:fixed;bottom:14px;right:14px;z-index:3000;padding:8px 10px;border-radius:999px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.15);color:#fff;font-weight:700;font-size:12px;backdrop-filter:blur(8px);">API: Prüfe...</div>
+    <div id="statusPill" style="position:fixed;bottom:14px;right:14px;z-index:3000;padding:8px 10px;border-radius:999px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.15);color:#fff;font-weight:700;font-size:12px;backdrop-filter:blur(8px);">API: Offline</div>
 
     <div id="login-screen">
         <div class="card">
-            <img src="3d.png" onerror="this.onerror=null; this.src='3d.jpg';" style="width:80px; margin-bottom:20px; border-radius:0; border: none; background: transparent; filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));">
-            <h2 style="margin:0; color:white;">Hallo Calin,</h2>
-            <p style="color:var(--text-dim); margin-top:10px; font-size:18px;">das ist mein Fivem Spieler Management System.</p>
-            <button class="btn" onclick="window.enterPanel()" style="margin-top: 25px;">SYSTEM STARTEN</button>
+            <img src="3d.png" onerror="this.onerror=null; this.src='3d.jpg';" style="width:80px; border-radius:0; border: none; background: transparent; filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));">
+            <h1 style="margin:10px 0 0 0; color:white; font-size: 32px;">Hallo Calin,</h1>
+            <h2 style="margin:5px 0 0 0; color:var(--neon); font-size: 20px;">Willkommen im FiveM Player Management System</h2>
+            
+            <div class="explanation-box">
+                <div style="margin-bottom: 12px;"><strong>Wie funktioniert dieses Panel?</strong></div>
+                <div style="margin-bottom: 8px;"><strong>1. Datenhaltung (Firebase):</strong> Im normalen Live-Betrieb nutzt dieses System eine Google Firebase NoSQL-Datenbank. Darüber werden das Team-Management, die Zugriffsrechte und die ToDo-Listen sicher und in Echtzeit synchronisiert.</div>
+                <div><strong>2. Server-Interaktion (REST-API):</strong> Das Panel interagiert direkt mit unserem FiveM-Spieleserver (republica.com). Klicken wir auf eine Aktion (z.B. "Geld setzen" oder "Inventar leeren"), sendet dieses Frontend einen HTTP-Request an die Server-API. Das Lua-Skript auf dem Server fängt den Request ab und wendet ihn sofort live im Spiel auf den ausgewählten Spieler an.</div>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #334155; font-size: 15px; color: #64748b;">
+                    <i class="fas fa-info-circle"></i> <em>Für diesen Showcase wurden statische Test-Daten (Spieler, Inventare, Todos) geladen. API-Requests werden simuliert, um die Funktionalität auch offline fehlerfrei zu demonstrieren.</em>
+                </div>
+            </div>
+
+            <button class="btn" onclick="window.enterPanel()">SHOWCASE STARTEN</button>
         </div>
     </div>
 
@@ -93,8 +114,8 @@
           <input id="invSearch" class="inv-search" placeholder="Suchen..." oninput="window.refreshInventory()">
           <div class="inv-actions">
             <button class="inv-btn" onclick="window.refreshInventory()"><i class="fas fa-sync"></i></button>
-            <button class="inv-btn danger" id="btn-clearinv" data-perm="clearinv" onclick="window.clearInventory(false)"><i class="fas fa-broom"></i> Clear</button>
-            <button class="inv-btn danger" id="btn-clearinv-w" data-perm="clearinv" onclick="window.clearInventory(true)"><i class="fas fa-skull"></i> Clear+W</button>
+            <button class="inv-btn danger" onclick="window.clearInventory(false)"><i class="fas fa-broom"></i> Clear</button>
+            <button class="inv-btn danger" onclick="window.clearInventory(true)"><i class="fas fa-skull"></i> Clear+W</button>
             <button class="inv-btn" onclick="window.closeInventory()"><i class="fas fa-times"></i></button>
           </div>
         </div>
@@ -107,7 +128,9 @@
         <div class="sidebar">
             <img src="3d.png" onerror="this.onerror=null; this.src='3d.jpg';" style="width:50px; border-radius:0; border:none; margin-bottom:30px; filter: drop-shadow(0 0 5px rgba(0, 242, 255, 0.5));">
             <div class="nav-icon active" onclick="window.switchTab('players', event)" title="Spieler"><i class="fas fa-users"></i></div>
-            <div class="nav-icon" id="nav-bans" data-perm="ban" onclick="window.switchTab('bans', event)" title="Bannliste"><i class="fas fa-user-slash"></i></div>
+            <div class="nav-icon" onclick="window.switchTab('bans', event)" title="Bannliste"><i class="fas fa-user-slash"></i></div>
+            <div class="nav-icon" onclick="window.switchTab('todos', event)" title="Aufgaben & Changelog"><i class="fas fa-list"></i></div>
+            <div class="nav-icon" onclick="window.switchTab('team', event)" title="Team / Accounts"><i class="fas fa-user-shield"></i></div>
             <div style="flex:1"></div>
             <div class="nav-icon" style="color:var(--danger)" onclick="location.reload()" title="Verlassen"><i class="fas fa-sign-out-alt"></i></div>
         </div>
@@ -127,8 +150,8 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px;">
                         <div><h1 id="pName" style="margin:0; font-size:36px; color:var(--neon);">Name</h1><span id="pID" class="p-id-badge" style="font-size:16px;">ID: 0</span></div>
                         <div style="display:flex; gap:10px;">
-                            <button class="btn" data-perm="spectate" style="background:#8b5cf6; color:white; width:auto; padding:8px 15px;" onclick="window.notify('Nutze F10 Ingame, um live zuzuschauen & Screenshots zu machen!', 'info')"><i class="fas fa-eye"></i> Spectate (Ingame)</button>
-                            <button class="btn btn-inv" id="btn-inv" data-perm="inv" style="width:auto; padding:8px 15px;" onclick="window.openInventory()"><i class="fas fa-box-open"></i> INVENTAR</button>
+                            <button class="btn" style="background:#8b5cf6; color:white; width:auto; padding:8px 15px;" onclick="window.notify('Nutze F10 Ingame, um live zuzuschauen & Screenshots zu machen!', 'info')"><i class="fas fa-eye"></i> Spectate (Ingame)</button>
+                            <button class="btn btn-inv" style="width:auto; padding:8px 15px;" onclick="window.openInventory()"><i class="fas fa-box-open"></i> INVENTAR</button>
                         </div>
                     </div>
                     <div style="display:flex; gap:30px; margin-bottom:25px;">
@@ -136,24 +159,67 @@
                         <div style="flex:1"><span style="font-size:12px; font-weight:bold; color:#0066ff">WESTE</span><div class="bar-container"><div id="armorBar" class="bar-val" style="background:#0066ff"></div></div></div>
                     </div>
                     <div class="action-grid">
-                        <button class="btn" id="btn-revive" data-perm="revive" style="background:var(--success); color:black;" onclick="window.sendAction('revive')"><i class="fas fa-heartbeat"></i> WIEDERBELEBEN</button>
-                        <button class="btn btn-refund" id="btn-refund" data-perm="refund" onclick="window.sendAction('refund')"><i class="fas fa-undo"></i> Rückerstattung</button>
+                        <button class="btn" style="background:var(--success); color:black;" onclick="window.sendAction('revive')"><i class="fas fa-heartbeat"></i> WIEDERBELEBEN</button>
+                        <button class="btn btn-refund" onclick="window.sendAction('refund')"><i class="fas fa-undo"></i> Rückerstattung</button>
                     </div>
                     <div class="action-grid">
-                        <div class="action-card" data-perm="giveitem"><span>ITEM GEBEN</span><div class="input-group"><input id="itemName" class="inp" style="margin:0" placeholder="z.B. bread"><input id="itemAmount" type="number" class="inp" style="margin:0; width:70px;" value="1"><button class="mini-btn" onclick="window.sendAction('giveitem')"><i class="fas fa-check"></i></button></div></div>
-                        <div class="action-card" data-perm="givemoney"><span>GELD GEBEN</span><div class="input-group"><select id="moneyType" class="inp" style="margin:0; width:90px;"><option value="cash">Bar</option><option value="bank">Bank</option></select><input id="moneyAmount" type="number" class="inp" style="margin:0" placeholder="Betrag"><button class="mini-btn" onclick="window.sendAction('givemoney')"><i class="fas fa-check"></i></button></div></div>
-                        <div class="action-card" data-perm="setmoney"><span>GELD SETZEN</span><div class="input-group"><select id="setMoneyType" class="inp" style="margin:0; width:90px;"><option value="cash">Bar</option><option value="bank">Bank</option></select><input id="setMoneyAmount" type="number" class="inp" style="margin:0" placeholder="Betrag"><button class="mini-btn" onclick="window.sendAction('setmoney')" style="background:var(--warning);"><i class="fas fa-pen"></i></button></div></div>
-                        <div class="action-card" data-perm="giveweapon"><span>WAFFE GEBEN</span><div class="input-group"><input id="weaponName" class="inp" style="margin:0" placeholder="weapon_pistol"><button class="mini-btn" onclick="window.sendAction('giveweapon')"><i class="fas fa-check"></i></button></div></div>
-                        <div class="action-card" data-perm="visum"><span>EINREISE (VISUM)</span><div class="input-group"><input id="visumAmount" type="number" class="inp" style="margin:0" value="1" placeholder="Anzahl"><button class="mini-btn" style="background:#a855f7; color:white;" onclick="window.sendAction('visum')"><i class="fas fa-passport"></i></button></div></div>
-                        <div class="action-card" data-perm="spawncar"><span>AUTO SPAWNEN (TEMPORÄR)</span><div class="input-group"><input id="spawnCarName" class="inp" style="margin:0" placeholder="z.B. t20"><button class="mini-btn" onclick="window.sendAction('spawncar')"><i class="fas fa-car"></i></button></div></div>
-                        <div class="action-card" data-perm="givecar"><span>AUTO IN GARAGE (GIVECAR)</span><div class="input-group"><input id="carName" class="inp" style="margin:0" placeholder="z.B. t20"><button class="mini-btn" style="background:var(--warning);" onclick="window.sendAction('givecar')"><i class="fas fa-key"></i></button></div></div>
+                        <div class="action-card"><span>ITEM GEBEN</span><div class="input-group"><input id="itemName" class="inp" style="margin:0" placeholder="z.B. bread"><input id="itemAmount" type="number" class="inp" style="margin:0; width:70px;" value="1"><button class="mini-btn" onclick="window.sendAction('giveitem')"><i class="fas fa-check"></i></button></div></div>
+                        <div class="action-card"><span>GELD GEBEN</span><div class="input-group"><select id="moneyType" class="inp" style="margin:0; width:90px;"><option value="cash">Bar</option><option value="bank">Bank</option></select><input id="moneyAmount" type="number" class="inp" style="margin:0" placeholder="Betrag"><button class="mini-btn" onclick="window.sendAction('givemoney')"><i class="fas fa-check"></i></button></div></div>
+                        <div class="action-card"><span>GELD SETZEN</span><div class="input-group"><select id="setMoneyType" class="inp" style="margin:0; width:90px;"><option value="cash">Bar</option><option value="bank">Bank</option></select><input id="setMoneyAmount" type="number" class="inp" style="margin:0" placeholder="Betrag"><button class="mini-btn" onclick="window.sendAction('setmoney')" style="background:var(--warning);"><i class="fas fa-pen"></i></button></div></div>
+                        <div class="action-card"><span>WAFFE GEBEN</span><div class="input-group"><input id="weaponName" class="inp" style="margin:0" placeholder="weapon_pistol"><button class="mini-btn" onclick="window.sendAction('giveweapon')"><i class="fas fa-check"></i></button></div></div>
+                        <div class="action-card"><span>EINREISE (VISUM)</span><div class="input-group"><input id="visumAmount" type="number" class="inp" style="margin:0" value="1" placeholder="Anzahl"><button class="mini-btn" style="background:#a855f7; color:white;" onclick="window.sendAction('visum')"><i class="fas fa-passport"></i></button></div></div>
+                        <div class="action-card"><span>AUTO SPAWNEN (TEMPORÄR)</span><div class="input-group"><input id="spawnCarName" class="inp" style="margin:0" placeholder="z.B. t20"><button class="mini-btn" onclick="window.sendAction('spawncar')"><i class="fas fa-car"></i></button></div></div>
+                        <div class="action-card"><span>AUTO IN GARAGE (GIVECAR)</span><div class="input-group"><input id="carName" class="inp" style="margin:0" placeholder="z.B. t20"><button class="mini-btn" style="background:var(--warning);" onclick="window.sendAction('givecar')"><i class="fas fa-key"></i></button></div></div>
                     </div>
-                    <div class="danger-zone" id="card-danger" data-perm="ban">
+                    <div class="danger-zone" id="card-danger">
                         <span class="danger-zone-title"><i class="fas fa-exclamation-triangle"></i> GEFAHRENZONE</span>
                         <input type="text" id="banReason" class="inp" placeholder="Grund für Bann/Kick..." style="margin:0 0 10px 0; background:rgba(0,0,0,0.5);">
                         <div style="display:flex; gap:15px; margin-bottom: 15px;"><button class="btn" style="background:orange; color:black; margin:0;" onclick="window.sendAction('kick')">VOM SERVER KICKEN</button></div>
                         <div style="display:flex; gap:10px;"><select id="banDuration" class="inp" style="margin:0; background:rgba(0,0,0,0.5);"><option value="0">Permanent bannen</option><option value="3600">1 Stunde bannen</option><option value="86400">1 Tag bannen</option><option value="604800">1 Woche bannen</option></select><button class="btn btn-red" style="margin:0; width:150px;" onclick="window.sendAction('ban')">BANNEN</button></div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-team" class="content hidden">
+            <div style="display:flex; width:100%; gap:30px;">
+                <div class="panel-list" style="width: 450px; flex:none;">
+                    <h3 style="color:var(--neon); margin-top:0;" id="form-title">ADMIN ANLEGEN</h3>
+                    <input type="email" id="tEmail" class="inp" placeholder="E-Mail Adresse (Login)">
+                    <input type="password" id="tPass" class="inp" placeholder="Passwort (min. 6 Zeichen)">
+                    <input type="text" id="tDiscord" class="inp" placeholder="Discord ID (Für Ingame-Menü)">
+                    <select id="tRank" class="inp">
+                        <option value="Supporter">Supporter</option>
+                        <option value="Moderator">Moderator</option>
+                        <option value="Administrator">Administrator</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Projektleitung">Projektleitung</option>
+                    </select>
+
+                    <h4 style="color:var(--text-dim); margin-bottom:5px; margin-top:15px;">RECHTE (WEB & INGAME)</h4>
+                    <div class="perm-grid" id="perm-checkboxes">
+                        <label><input type="checkbox" value="revive"> Revive</label>
+                        <label><input type="checkbox" value="heal"> Heal</label>
+                        <label><input type="checkbox" value="kick"> Kick</label>
+                        <label><input type="checkbox" value="ban"> Ban</label>
+                        <label><input type="checkbox" value="giveitem"> Give Item</label>
+                        <label><input type="checkbox" value="giveweapon"> Give Weapon</label>
+                        <label><input type="checkbox" value="givemoney"> Give Money</label>
+                        <label><input type="checkbox" value="spawncar"> Auto Spawnen</label>
+                    </div>
+
+                    <label style="display:flex; align-items:center; gap:10px; margin-top:15px; font-size:14px; color:var(--warning); font-weight:bold; cursor:pointer;" id="lbl-master">
+                        <input type="checkbox" id="tMaster" style="width:20px; height:20px;"> Darf Panel & Admins verwalten (Master)
+                    </label>
+                    <button class="btn" id="btn-create-admin" style="margin-top:15px;" onclick="window.saveTeamAccount()">ACCOUNT ERSTELLEN</button>
+                    <button class="btn" id="btn-cancel-edit" style="margin-top:10px; background:#444; color:white; display:none;" onclick="window.cancelEditAdmin()">BEARBEITEN ABBRECHEN</button>
+                </div>
+                <div class="panel-detail" style="flex:1;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3 style="color:var(--success); margin:0;">TEAM MITGLIEDER</h3>
+                        <button class="mini-btn" onclick="window.fetchAdmins()" style="background:transparent; border:1px solid var(--success); color:var(--success); padding:10px;"><i class="fas fa-sync"></i> Aktualisieren</button>
+                    </div>
+                    <div id="adminListContainer" style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:600px;"></div>
                 </div>
             </div>
         </div>
@@ -166,81 +232,115 @@
                 <div id="banListContainer" style="overflow-y:auto; flex:1;"></div>
             </div>
         </div>
+
+        <div id="page-todos" class="content hidden">
+            <div class="panel-full">
+                <h2 style="color:var(--neon); margin-top:0; margin-bottom:20px;">AUFGABEN & CHANGELOGS</h2>
+                
+                <div id="todoControls" style="background:rgba(0,0,0,0.3); padding:20px; border-radius:8px; border:1px solid #333; margin-bottom:20px;">
+                    <h3 id="todoFormTitle" style="margin-top:0; color:var(--text-dim);">NEUE AUFGABE</h3>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <input id="todoInput" class="inp" style="margin:0; flex:1;" placeholder="Kurzer Titel der Aufgabe...">
+                        <select id="todoPriority" class="inp" style="margin:0; width:120px;">
+                            <option value="low">Niedrig</option>
+                            <option value="medium" selected>Mittel</option>
+                            <option value="high">Hoch</option>
+                        </select>
+                        <select id="todoStatus" class="inp" style="margin:0; width:160px;">
+                            <option value="open" selected>Offen</option>
+                            <option value="progress">In Bearbeitung</option>
+                            <option value="done">Fertig (Changelog)</option>
+                        </select>
+                    </div>
+                    <textarea id="todoDesc" class="inp" style="margin:0 0 10px 0; height:80px; resize:none;" placeholder="Genaue Beschreibung / Details (Optional)..."></textarea>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn" id="btn-save-todo" style="margin:0; width:200px;" onclick="window.saveTodo()">SPEICHERN</button>
+                        <button class="btn" id="btn-cancel-todo" style="margin:0; width:200px; background:#444; color:white; display:none;" onclick="window.cancelTodoEdit()">ABBRECHEN</button>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:20px; flex:1; overflow:hidden;">
+                    <div style="flex:1; display:flex; flex-direction:column;">
+                        <h3 style="color:var(--warning); margin:0;">AKTIVE AUFGABEN</h3>
+                        <div id="todoList" style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1; padding-right:10px;"></div>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column;">
+                        <h3 style="color:var(--success); margin:0;">CHANGELOG (ERLEDIGT)</h3>
+                        <div id="changelogList" style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1; padding-right:10px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // --- GRUNDLEGENDE SETUP & HILFSFUNKTIONEN ---
+        // --- GRUNDLEGENDE FUNKTIONEN ---
         function escapeHtml(str) { return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
-        const SERVER_URL = "http://185.117.3.227:30120/admin_pannel_flo";
-        const API_SECRET = "SJHI9=*dvg08";
+        window.notify = (msg, type='success') => { const container = document.getElementById('toast-container'); const div = document.createElement('div'); div.className = `toast ${type}`; div.innerHTML = `<span>${window.escapeHtml(msg)}</span>`; container.appendChild(div); setTimeout(() => div.remove(), 3500); };
 
-        // Globale Variablen für FiveM Sync
-        window.allPlayers = []; window.selectedId = null; window.isSyncing = false; window.syncTimer = null; window.invOpen = false;
-        window.lastPlayersDigest = ""; window.searchDebounceTimer = null;
+        // --- FESTE TESTDATEN FÜR SHOWCASE ---
+        // Test-Spieler Liste
+        window.dummyPlayers = [
+            { id: 1, name: "Calin", job: "Projektleitung", health: 100, armor: 100, isAdmin: true },
+            { id: 24, name: "Leon Mustermann", job: "Polizei (LSPD)", health: 85, armor: 50, isAdmin: false },
+            { id: 112, name: "Anna Schmidt", job: "Medic (LSMD)", health: 100, armor: 0, isAdmin: false },
+            { id: 45, name: "John Doe", job: "Ballas", health: 40, armor: 0, isAdmin: false }
+        ];
+
+        // Test-Inventar (Wird geladen wenn man das Inventar eines Spielers öffnet)
+        window.dummyInventory = {
+            money: { cash: 1250, bank: 55000 },
+            items: [
+                { name: "bread", label: "Sandwich", count: 3 },
+                { name: "water", label: "Wasserflasche", count: 5 },
+                { name: "phone", label: "Smartphone", count: 1 },
+                { name: "repairkit", label: "Reparaturkasten", count: 2 }
+            ],
+            weapons: [
+                { name: "weapon_pistol", label: "Pistole .50", ammo: 45 },
+                { name: "weapon_flashlight", label: "Taschenlampe", ammo: 1 }
+            ]
+        };
+
+        // Standard Todos initialisieren (Nur beim allerersten Laden)
+        if (!localStorage.getItem('republica_todos_init')) {
+            const defaultTodos = [
+                { id: "t1", task: "Admin Panel Showcase vorbereiten", description: "Die UI zeigen und die Anbindung an die Server REST-API sowie die Firebase-Architektur erklären.", priority: "medium", status: "done", created: Date.now() - 50000 },
+                { id: "t2", task: "Inventar Bug", description: "Manchmal verlieren Spieler Items, wenn sie sich schnell hintereinander ein- und ausloggen. Logs prüfen!", priority: "high", status: "progress", created: Date.now() - 10000 },
+                { id: "t3", task: "Neue Fahrzeuge einfügen", description: "Die neuen Polizei-Fahrzeuge (Audi & BMW) müssen noch in die Garage eingetragen werden.", priority: "medium", status: "open", created: Date.now() }
+            ];
+            localStorage.setItem('republica_todos', JSON.stringify(defaultTodos));
+            localStorage.setItem('republica_todos_init', 'true');
+        }
+
+        // Standard Team initialisieren
+        if (!localStorage.getItem('republica_team_init')) {
+            const defaultTeam = [
+                { id: "a1", email: "calin@republica.com", discord: "Calin#1234", rank: "Projektleitung", isMaster: true, perms: ["revive", "heal", "kick", "ban", "giveitem", "giveweapon", "givemoney", "spawncar"] },
+                { id: "a2", email: "support@republica.com", discord: "SupporterXYZ", rank: "Supporter", isMaster: false, perms: ["revive", "heal", "kick"] }
+            ];
+            localStorage.setItem('republica_team', JSON.stringify(defaultTeam));
+            localStorage.setItem('republica_team_init', 'true');
+        }
+
+        window.allPlayers = []; window.selectedId = null; window.invOpen = false;
 
         // --- DASHBOARD START ---
-        // Dies simuliert den Login-Erfolg und lädt das Panel
         window.enterPanel = () => {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             setTimeout(() => document.getElementById('dashboard').classList.add('visible'), 50);
-            window.startPolling();
+            
+            // Lade UI Daten
+            window.loadShowcasePlayers();
+            window.fetchAdmins();
+            window.loadTodos();
+            
+            // Setze den API Status Indikator auf "Showcase"
+            document.getElementById("statusPill").textContent = "API: Showcase Modus";
+            document.getElementById("statusPill").style.borderColor = 'var(--neon)';
+            document.getElementById("statusPill").style.color = 'var(--neon)';
         };
-
-        function getPlayersDigest(players) {
-            try { return JSON.stringify((players || []).map(p => [p.id, p.name, p.health, p.armor, p.isAdmin, p.job])); } catch (_) { return String(Date.now()); }
-        }
-
-        window.scheduleRenderList = () => { clearTimeout(window.searchDebounceTimer); window.searchDebounceTimer = setTimeout(() => window.renderList(), 120); };
-
-        async function fetchWithTimeout(url, options = {}) {
-            const timeoutMs = options.timeoutMs || 8000;
-            const controller = new AbortController(); const id = setTimeout(() => controller.abort(), timeoutMs);
-            try { const r = await fetch(url, { ...options, signal: controller.signal }); clearTimeout(id); return r; } catch(e) { clearTimeout(id); throw e; }
-        }
-
-        async function fetchJsonWithRetry(url, options = {}, retries = 1) {
-            let lastErr;
-            for (let i = 0; i <= retries; i++) {
-                try {
-                    const res = await fetchWithTimeout(url, options);
-                    if (!res.ok) throw new Error("HTTP " + res.status);
-                    return await res.json();
-                } catch (err) { lastErr = err; if (i < retries) { await new Promise(r => setTimeout(r, 350)); } }
-            }
-            throw lastErr;
-        }
-
-        // --- UI BENACHRICHTIGUNGEN ---
-        window.notify = (msg, type='success') => { const container = document.getElementById('toast-container'); const div = document.createElement('div'); div.className = `toast ${type}`; div.innerHTML = `<span>${window.escapeHtml(msg)}</span>`; container.appendChild(div); setTimeout(() => div.remove(), 3500); };
-
-        // --- FIVEM SYNC LOGIK ---
-        window.syncLoop = async () => {
-            if(window.isSyncing) return; window.isSyncing = true;
-            try { 
-                if (!document.hidden) { 
-                    let url = SERVER_URL + "/sync"; if(window.invOpen && window.selectedId) url += "?inv=" + window.selectedId;
-                    const data = await fetchJsonWithRetry(url, { method: 'GET', timeoutMs: 9000 }, 1);
-                    document.getElementById("statusPill").textContent = "API: online"; document.getElementById("statusPill").style.borderColor = 'rgba(5,255,161,0.35)';
-                    const nextPlayers = data.players || []; const nextDigest = getPlayersDigest(nextPlayers); window.allPlayers = nextPlayers;
-                    
-                    if (nextDigest !== window.lastPlayersDigest) { window.lastPlayersDigest = nextDigest; window.renderList(); }
-                    
-                    if(window.selectedId) { 
-                        const p = window.allPlayers.find(x => x.id == window.selectedId); 
-                        if(!p) window.deselect(); 
-                        else { document.getElementById('hpBar').style.width = (p.health||0) + "%"; document.getElementById('armorBar').style.width = (p.armor||0) + "%"; } 
-                    }
-                    if(window.invOpen && data.inventory && window.selectedId) window.renderInventory(data.inventory);
-                } 
-            } catch(e) { 
-                document.getElementById("statusPill").textContent = "API: offline"; document.getElementById("statusPill").style.borderColor = 'rgba(255,42,109,0.45)'; 
-            }
-            window.isSyncing = false; window.syncTimer = setTimeout(window.syncLoop, 5000);
-        };
-
-        window.startPolling = () => { clearTimeout(window.syncTimer); window.syncLoop(); }; 
-        window.stopPolling = () => { clearTimeout(window.syncTimer); };
 
         // --- TAB STEUERUNG ---
         window.switchTab = (tab, ev) => { 
@@ -248,14 +348,19 @@
             document.getElementById('page-'+tab).classList.remove('hidden'); 
             document.querySelectorAll('.nav-icon').forEach(el => el.classList.remove('active')); 
             if(ev && ev.currentTarget) ev.currentTarget.classList.add('active'); 
-            if(tab === 'bans') window.fetchBans(); 
         };
 
-        // --- SPIELER LISTE & DETAILS ---
+        // --- SPIELER LISTE (SHOWCASE) ---
+        window.loadShowcasePlayers = () => {
+            window.allPlayers = window.dummyPlayers;
+            window.renderList();
+        };
+
+        window.scheduleRenderList = () => { setTimeout(() => window.renderList(), 120); };
+
         window.renderList = () => {
             const list = document.getElementById('playerList'); const term = (document.getElementById('search').value || "").toLowerCase().trim(); list.innerHTML = "";
-            const sorted = [...window.allPlayers].sort((a, b) => (a.id || 0) - (b.id || 0));
-            sorted.filter(p => { const n = (p.name || "").toLowerCase(); const id = String(p.id || ""); return term === "" || n.includes(term) || id.includes(term); }).forEach(p => {
+            window.allPlayers.filter(p => { const n = (p.name || "").toLowerCase(); const id = String(p.id || ""); return term === "" || n.includes(term) || id.includes(term); }).forEach(p => {
                 const div = document.createElement('div'); div.className = `player-item ${window.selectedId == p.id ? 'selected' : ''}`;
                 let adminBadge = p.isAdmin ? '<span style="background:var(--team); color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:4px; margin-left:8px; box-shadow: 0 0 8px rgba(59,130,246,0.6);">TEAM</span>' : '';
                 div.innerHTML = `<div class="player-main"><div class="player-name">${window.escapeHtml(p.name)} ${adminBadge}</div><div class="player-sub">${window.escapeHtml(p.job || "Unbekannt")} | HP ${Number(p.health || 0)} | Armor ${Number(p.armor || 0)}</div></div><span class="p-id-badge">${p.id}</span>`;
@@ -272,17 +377,12 @@
             document.getElementById('armorBar').style.width = (p.armor||0) + "%"; 
         };
         
-        window.deselect = () => { 
-            window.selectedId = null; 
-            document.getElementById('emptyState').classList.remove('hidden'); 
-            document.getElementById('playerDetailContent').classList.add('hidden'); 
-            window.closeInventory(); window.renderList(); 
-        };
+        window.deselect = () => { window.selectedId = null; document.getElementById('emptyState').classList.remove('hidden'); document.getElementById('playerDetailContent').classList.add('hidden'); window.closeInventory(); window.renderList(); };
 
-        // --- INVENTAR SYSTEM ---
-        window.openInventory = () => { if(!window.selectedId) return window.notify("Kein Spieler ausgewählt","error"); window.invOpen = true; document.getElementById('invModal').classList.add('show'); document.getElementById('invOwner').value = `Spieler ID: ${window.selectedId}`; window.refreshInventory(); }; 
+        // --- INVENTAR SYSTEM (SHOWCASE) ---
+        window.openInventory = () => { if(!window.selectedId) return window.notify("Kein Spieler ausgewählt","error"); window.invOpen = true; document.getElementById('invModal').classList.add('show'); document.getElementById('invOwner').value = `Spieler ID: ${window.selectedId}`; window.renderInventory(window.dummyInventory); }; 
         window.closeInventory = () => { window.invOpen = false; document.getElementById('invModal').classList.remove('show'); }; 
-        window.refreshInventory = () => { clearTimeout(window.syncTimer); window.syncLoop(); };
+        window.refreshInventory = () => { window.renderInventory(window.dummyInventory); window.notify("Inventar neu geladen", "success"); };
 
         window.renderInventory = data => {
             document.getElementById('invCash').innerText = `Cash: ${data.money?.cash ?? 0}$`; document.getElementById('invBank').innerText = `Bank: ${data.money?.bank ?? 0}$`;
@@ -297,60 +397,175 @@
             });
         };
 
-        window.clearInventory = async (withWeapons) => { 
+        window.clearInventory = (withWeapons) => { 
             if(!window.selectedId) return; if(!confirm(withWeapons ? "Inventar + Waffen wirklich clearen?" : "Inventar wirklich clearen?")) return; 
-            const url = SERVER_URL + "/command?secret=" + encodeURIComponent(API_SECRET) + "&adminName=Calin&action=clearinv&targetId=" + window.selectedId + "&clearWeapons=" + (withWeapons ? "true" : "false");
-            try { const res = await fetchWithTimeout(url, { method: 'GET' }); if(res.ok) window.notify("Clear gesendet","success"); else window.notify("Clear fehlgeschlagen","error"); setTimeout(()=>window.refreshInventory(), 500); } catch(e) { window.notify("Fehler","error"); } 
+            window.notify("Befehl an Server gesendet: Inventar geleert", "success");
+            // Leert das Test-Inventar optisch
+            window.dummyInventory.items = [];
+            if(withWeapons) window.dummyInventory.weapons = [];
+            window.refreshInventory();
         };
 
-        // --- AKTIONEN AN FIVEM SENDEN ---
-        window.sendAction = async action => {
+        // --- AKTIONEN AN FIVEM SENDEN (MOCK FÜR SHOWCASE) ---
+        window.sendAction = action => {
             if(!window.selectedId) return; 
-            let url = SERVER_URL + "/command?secret=" + encodeURIComponent(API_SECRET) + "&adminName=Calin&action=" + encodeURIComponent(action) + "&targetId=" + window.selectedId;
-            if(action === 'giveitem') { url += "&item=" + encodeURIComponent(document.getElementById('itemName').value) + "&amount=" + encodeURIComponent(document.getElementById('itemAmount').value); }
-            if(action === 'givemoney') { url += "&amount=" + encodeURIComponent(document.getElementById('moneyAmount').value) + "&account=" + encodeURIComponent(document.getElementById('moneyType').value); }
-            if(action === 'setmoney') { url += "&amount=" + encodeURIComponent(document.getElementById('setMoneyAmount').value) + "&account=" + encodeURIComponent(document.getElementById('setMoneyType').value); }
-            if(action === 'giveweapon') { url += "&item=" + encodeURIComponent(document.getElementById('weaponName').value); }
-            if(action === 'visum') { url += "&amount=" + encodeURIComponent(document.getElementById('visumAmount').value); }
-            if(action === 'givecar') { url += "&model=" + encodeURIComponent(document.getElementById('carName').value); }
-            if(action === 'spawncar') { url += "&model=" + encodeURIComponent(document.getElementById('spawnCarName').value); }
-            if(action === 'ban' || action === 'kick') { url += "&reason=" + encodeURIComponent(document.getElementById('banReason').value || "Gekickt durch Admin Panel"); }
-            if(action === 'ban') { url += "&duration=" + encodeURIComponent(document.getElementById('banDuration').value); }
             
-            window.notify("Wird ausgeführt...", "success"); 
-            try { 
-                const res = await fetchWithTimeout(url, { method: 'GET' }); 
-                if(res.ok) window.notify("Erfolgreich!", 'success'); 
-                else window.notify("Fehler", "error"); 
-                if(action === "ban") setTimeout(window.fetchBans, 700); 
-            } catch(e) { window.notify("Verbindungsfehler", "error"); }
+            // Simuliert einen HTTP Request
+            window.notify("Befehl (" + action.toUpperCase() + ") erfolgreich an FiveM API gesendet!", "success");
+            
+            // Kleine grafische Effekte für den Showcase (z.B. Heilung)
+            if(action === 'revive' || action === 'heal') {
+                const p = window.allPlayers.find(x => x.id == window.selectedId);
+                if(p) { p.health = 100; document.getElementById('hpBar').style.width = "100%"; }
+            }
         };
 
-        // --- BANNSYSTEM ---
-        window.fetchBans = async () => { 
-            try { 
-                const res = await fetchWithTimeout(SERVER_URL + "/bans?secret=" + encodeURIComponent(API_SECRET), { cache:"no-store" }); 
-                const bans = await res.json(); 
-                const list = document.getElementById('banListContainer'); list.innerHTML = ""; 
-                if(!bans || bans.length === 0) { list.innerHTML = "<div style='text-align:center; color:#888; margin-top:50px;'>Keine aktiven Banns</div>"; return; } 
+        window.fetchBans = () => { 
+            const list = document.getElementById('banListContainer'); list.innerHTML = ""; 
+            // Fake Ban für den Showcase
+            const b = { name: "TrollGamer99", license: "license:29f8a8s7d...", reason: "VDM am Würfelpark", expire: 0 };
+            const div = document.createElement('div'); div.className = "ban-item"; 
+            div.innerHTML = `<div style="color:white; margin:0;"><h4 style="margin:0;">${window.escapeHtml(b.name)} <small style="color:var(--text-dim);">(${window.escapeHtml(b.license)})</small></h4><small style="color:var(--text-dim);">Grund: ${window.escapeHtml(b.reason)} | Permanent</small></div><button class="mini-btn" onclick="window.notify('Spieler entbannt (Showcase)', 'success'); this.parentElement.remove();">FREIGEBEN</button>`; 
+            list.appendChild(div); 
+        };
+
+        // --- TEAM SYSTEM (LOCALSTORAGE) ---
+        window.editingDocId = null;
+
+        window.fetchAdmins = () => {
+            const mockTeam = JSON.parse(localStorage.getItem('republica_team')) || [];
+            const list = document.getElementById('adminListContainer'); list.innerHTML = "";
+            window.adminDataCache = {};
+            
+            mockTeam.forEach(data => {
+                window.adminDataCache[data.id] = data;
+                const badge = data.isMaster ? '<span style="background:var(--warning);color:black;padding:2px 5px;border-radius:3px;font-size:10px;margin-left:10px;font-weight:bold;">MASTER</span>' : '';
+                list.innerHTML += `<div class="ban-item" style="border-left-color:var(--success);"><div style="color:white; margin:0;"><h4 style="margin:0; font-size:15px;">Discord: ${window.escapeHtml(data.discord)} ${badge}</h4><small style="color:var(--text-dim);">E-Mail: ${window.escapeHtml(data.email)} | Rang: ${window.escapeHtml(data.rank)}</small></div><div><button class="btn-dash" style="background:transparent; border:1px solid var(--warning); color:var(--warning); padding:5px 10px; margin-right:5px; cursor:pointer;" onclick="window.editAdmin('${data.id}')">BEARBEITEN</button><button class="btn-dash" style="background:transparent; border:1px solid var(--danger); color:var(--danger); padding:5px 10px; cursor:pointer;" onclick="window.removeAdmin('${data.id}')">ENTFERNEN</button></div></div>`;
+            });
+        };
+
+        window.saveTeamAccount = () => {
+            const email = document.getElementById('tEmail').value.toLowerCase();
+            const pass = document.getElementById('tPass').value;
+            const discordId = document.getElementById('tDiscord').value.trim();
+            const rank = document.getElementById('tRank').value;
+            const makeMaster = document.getElementById('tMaster').checked;
+            const selectedPerms = Array.from(document.querySelectorAll('#perm-checkboxes input:checked')).map(cb => cb.value);
+
+            if(!email || !discordId) return window.notify("Email und Discord ID erforderlich!", "error");
+
+            let mockTeam = JSON.parse(localStorage.getItem('republica_team')) || [];
+
+            if(window.editingDocId) {
+                const index = mockTeam.findIndex(t => t.id === window.editingDocId);
+                if(index !== -1) {
+                    mockTeam[index].discord = discordId; mockTeam[index].rank = rank; mockTeam[index].isMaster = makeMaster; mockTeam[index].perms = selectedPerms;
+                }
+                window.notify("Admin aktualisiert", "success");
+            } else {
+                if(pass.length < 6) return window.notify("Passwort muss min. 6 Zeichen lang sein!", "error");
+                const newAdmin = { id: Date.now().toString(), email: email, discord: discordId, rank: rank, isMaster: makeMaster, perms: selectedPerms };
+                mockTeam.push(newAdmin);
+                window.notify("Admin angelegt", "success");
+            }
+
+            localStorage.setItem('republica_team', JSON.stringify(mockTeam));
+            window.cancelEditAdmin();
+            window.fetchAdmins();
+        };
+
+        window.editAdmin = (id) => {
+            const data = window.adminDataCache[id]; if(!data) return;
+            document.getElementById('form-title').innerText = "ADMIN BEARBEITEN";
+            document.getElementById('tEmail').value = data.email || ""; document.getElementById('tEmail').disabled = true; 
+            document.getElementById('tPass').value = "********"; document.getElementById('tPass').disabled = true; 
+            document.getElementById('tDiscord').value = data.discord || ""; document.getElementById('tRank').value = data.rank || "Supporter";
+            document.getElementById('tMaster').checked = !!data.isMaster;
+            const perms = data.perms || []; document.querySelectorAll('#perm-checkboxes input').forEach(cb => { cb.checked = perms.includes(cb.value); });
+            document.getElementById('btn-create-admin').innerText = "ÄNDERUNGEN SPEICHERN"; document.getElementById('btn-create-admin').style.background = "var(--warning)"; document.getElementById('btn-cancel-edit').style.display = "inline-block";
+            window.editingDocId = id;
+        };
+
+        window.cancelEditAdmin = () => {
+            window.editingDocId = null; document.getElementById('form-title').innerText = "NEUEN ADMIN ANLEGEN";
+            document.getElementById('tEmail').value = ""; document.getElementById('tEmail').disabled = false;
+            document.getElementById('tPass').value = ""; document.getElementById('tPass').disabled = false;
+            document.getElementById('tDiscord').value = ""; document.getElementById('tRank').value = "Supporter"; document.getElementById('tMaster').checked = false;
+            document.querySelectorAll('#perm-checkboxes input').forEach(cb => cb.checked = false );
+            document.getElementById('btn-create-admin').innerText = "ACCOUNT ERSTELLEN"; document.getElementById('btn-create-admin').style.background = "var(--neon)"; document.getElementById('btn-cancel-edit').style.display = "none";
+        };
+
+        window.removeAdmin = (id) => {
+            if(!confirm("Diesen Admin wirklich entfernen?")) return;
+            let mockTeam = JSON.parse(localStorage.getItem('republica_team')) || [];
+            mockTeam = mockTeam.filter(t => t.id !== id);
+            localStorage.setItem('republica_team', JSON.stringify(mockTeam));
+            window.notify("Admin gelöscht", "success");
+            window.fetchAdmins();
+        };
+
+        // --- TODO SYSTEM (LOCALSTORAGE) ---
+        window.editingTodoId = null;
+
+        window.loadTodos = () => {
+            const mockTodos = JSON.parse(localStorage.getItem('republica_todos')) || [];
+            const listOpen = document.getElementById('todoList'); const listDone = document.getElementById('changelogList'); 
+            listOpen.innerHTML = ""; listDone.innerHTML = ""; window.todoDataCache = {};
+            
+            mockTodos.sort((a,b) => b.created - a.created).forEach(d => {
+                window.todoDataCache[d.id] = d;
+                let pC = "var(--warning)"; let pText = "MITTEL"; if(d.priority === "high") { pC = "var(--danger)"; pText = "HOCH"; } if(d.priority === "low") { pC = "var(--success)"; pText = "NIEDRIG"; } 
+                let sC = "var(--text-dim)"; let sText = "OFFEN"; if(d.status === "progress") { sC = "var(--warning)"; sText = "BEARBEITUNG"; } if(d.status === "done") { sC = "var(--success)"; sText = "FERTIG"; }
                 
-                bans.forEach(b => { 
-                    let expireText = "Permanent"; if(b.expire != 0) { const date = new Date(b.expire * 1000); expireText = "Bis: " + date.toLocaleDateString() + " " + date.toLocaleTimeString(); } 
-                    const div = document.createElement('div'); div.className = "ban-item"; 
-                    div.innerHTML = `<div style="color:white; margin:0;"><h4 style="margin:0;">${window.escapeHtml(b.name||"")} <small style="color:var(--text-dim);">(${window.escapeHtml(b.license||"")})</small></h4><small style="color:var(--text-dim);">Grund: ${window.escapeHtml(b.reason||"")} | ${expireText}</small></div><button class="mini-btn" onclick="window.unban('${window.escapeHtml(b.license||"")}')">FREIGEBEN</button>`; 
-                    list.appendChild(div); 
-                }); 
-            } catch(e) { window.notify("Konnte Bannliste nicht laden", "error"); } 
+                const actionIcons = `<div style="display:flex; gap:12px;"><i class="fas fa-pen" style="color:var(--neon); cursor:pointer; font-size:14px;" title="Bearbeiten" onclick="window.editTodo('${d.id}')"></i><i class="fas fa-trash" style="color:var(--danger); cursor:pointer; font-size:14px;" title="Löschen" onclick="window.delTodo('${d.id}')"></i></div>`;
+                const div = document.createElement('div'); div.className = `todo-item`; div.style.flexDirection = "column"; div.style.alignItems = "flex-start";
+                div.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%; margin-bottom: ${d.description ? '10px' : '0'};"><div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;"><span style="font-size: 10px; padding: 2px 6px; border-radius: 3px; color:black; font-weight: bold; background: ${pC}">${pText}</span><span style="font-size: 10px; padding: 1px 5px; border-radius: 3px; border: 1px solid ${sC}; color: ${sC}; font-weight: bold;">${sText}</span><strong style="color:white; font-size:16px;">${window.escapeHtml(d.task)}</strong></div>${actionIcons}</div>${d.description ? `<div style="font-size:13px; color:var(--text-dim); white-space:pre-wrap; width:100%; background:rgba(0,0,0,0.2); padding:8px; border-radius:4px; border-left:2px solid #334155; box-sizing:border-box;">${window.escapeHtml(d.description)}</div>` : ''}`; 
+                
+                if(d.status === "done") { listDone.appendChild(div); } else { listOpen.appendChild(div); }
+            });
         };
 
-        window.unban = async license => { 
-            if(!confirm("Wirklich entbannen?")) return; 
-            const url = SERVER_URL + "/command?secret=" + encodeURIComponent(API_SECRET) + "&action=unban&license=" + encodeURIComponent(license); 
-            try { 
-                const res = await fetchWithTimeout(url, { method: 'GET' }); 
-                if(res.ok) window.notify("Entbannt","success"); else window.notify("Fehler","error"); 
-                setTimeout(window.fetchBans, 700); 
-            } catch(e) { window.notify("Fehler","error"); } 
+        window.saveTodo = () => { 
+            const txt = document.getElementById('todoInput').value; const desc = document.getElementById('todoDesc').value; const prio = document.getElementById('todoPriority').value; const status = document.getElementById('todoStatus').value;
+            if(!txt) return window.notify("Titel fehlt!", "error");
+            
+            let mockTodos = JSON.parse(localStorage.getItem('republica_todos')) || [];
+
+            if(window.editingTodoId) {
+                const index = mockTodos.findIndex(t => t.id === window.editingTodoId);
+                if(index !== -1) {
+                    mockTodos[index].task = txt; mockTodos[index].description = desc; mockTodos[index].priority = prio; mockTodos[index].status = status;
+                }
+                window.notify("Aufgabe aktualisiert", "success");
+            } else {
+                const newTodo = { id: Date.now().toString(), task: txt, description: desc, priority: prio, status: status, created: Date.now() };
+                mockTodos.push(newTodo);
+                window.notify("Aufgabe hinzugefügt", "success");
+            }
+            
+            localStorage.setItem('republica_todos', JSON.stringify(mockTodos));
+            window.cancelTodoEdit();
+            window.loadTodos();
+        };
+
+        window.editTodo = (id) => {
+            const d = window.todoDataCache[id]; if(!d) return; window.editingTodoId = id;
+            document.getElementById('todoInput').value = d.task || ''; document.getElementById('todoDesc').value = d.description || ''; document.getElementById('todoPriority').value = d.priority || 'medium'; document.getElementById('todoStatus').value = d.status || 'open';
+            document.getElementById('todoFormTitle').innerText = "AUFGABE BEARBEITEN"; document.getElementById('btn-save-todo').innerText = "ÄNDERUNGEN SPEICHERN"; document.getElementById('btn-save-todo').style.background = "var(--warning)"; document.getElementById('btn-cancel-todo').style.display = "block";
+        };
+
+        window.cancelTodoEdit = () => {
+            window.editingTodoId = null; document.getElementById('todoInput').value = ''; document.getElementById('todoDesc').value = ''; document.getElementById('todoPriority').value = 'medium'; document.getElementById('todoStatus').value = 'open';
+            document.getElementById('todoFormTitle').innerText = "NEUE AUFGABE"; document.getElementById('btn-save-todo').innerText = "SPEICHERN"; document.getElementById('btn-save-todo').style.background = "var(--neon)"; document.getElementById('btn-cancel-todo').style.display = "none";
+        };
+
+        window.delTodo = id => { 
+            if(!confirm("Aufgabe wirklich löschen?")) return;
+            let mockTodos = JSON.parse(localStorage.getItem('republica_todos')) || [];
+            mockTodos = mockTodos.filter(t => t.id !== id);
+            localStorage.setItem('republica_todos', JSON.stringify(mockTodos));
+            window.notify("Gelöscht", "success");
+            window.loadTodos();
         };
     </script>
 </body>

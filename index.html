@@ -4,87 +4,335 @@
     <meta charset="UTF-8">
     <title>Republica Admin Panel - Showcase</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg: #050a14; --panel: rgba(13, 22, 35, 0.95); --border: rgba(0, 242, 255, 0.3); --neon: #00f2ff; --text: #ffffff; --text-dim: #8ca0b8; --danger: #ff2a6d; --warning: #ff9f1c; --success: #05ffa1; --team: #3b82f6; --refund: #a855f7; }
-        body { margin: 0; font-family: 'Rajdhani', sans-serif; background-color: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
-        body::before { content: ""; position: fixed; inset: 0; background: url('3d.png') no-repeat center center; background-size: min(60vmin, 700px); opacity: 0.15; z-index: -1; pointer-events: none; }
-        #toast-container { position: absolute; top: 20px; right: 20px; z-index: 2000; }
-        .toast { background: rgba(0,0,0,0.9); border-left: 4px solid var(--neon); color: white; padding: 15px 20px; margin-bottom: 10px; border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; align-items: center; animation: slideIn 0.3s ease-out; font-weight: bold; }
-        .toast.error { border-left-color: var(--danger); } .toast.success { border-left-color: var(--success); }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        /* Farbvariablen für das gesamte Design (Dark Theme mit Neon-Akzenten) */
+        :root { 
+            --bg: #050a14; 
+            --panel: rgba(13, 22, 35, 0.95); 
+            --border: rgba(0, 242, 255, 0.3); 
+            --neon: #00f2ff; 
+            --text: #ffffff; 
+            --text-dim: #8ca0b8; 
+            --danger: #ff2a6d; 
+            --warning: #ff9f1c; 
+            --success: #05ffa1; 
+            --team: #3b82f6; 
+            --refund: #a855f7; 
+        }
+
+        /* Grundeinstellungen für den Body: Schriftart, Hintergrund, Layout */
+        body { 
+            margin: 0; 
+            font-family: 'Rajdhani', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            height: 100vh; 
+            display: flex; 
+            overflow: hidden; 
+        }
+
+        /* Hintergrundbild-Effekt (leicht transparent) */
+        body::before { 
+            content: ""; 
+            position: fixed; 
+            inset: 0; 
+            background: url('3d.png') no-repeat center center; 
+            background-size: min(60vmin, 700px); 
+            opacity: 0.15; 
+            z-index: -1; 
+            pointer-events: none; 
+        }
+
+        /* --- Benachrichtigungen (Toasts) --- */
+        #toast-container { 
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            z-index: 2000; 
+        }
+        .toast { 
+            background: rgba(0,0,0,0.9); 
+            border-left: 4px solid var(--neon); 
+            color: white; 
+            padding: 15px 20px; 
+            margin-bottom: 10px; 
+            border-radius: 4px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+            display: flex; 
+            align-items: center; 
+            animation: slideIn 0.3s ease-out; 
+            font-weight: bold; 
+        }
+        .toast.error { border-left-color: var(--danger); } 
+        .toast.success { border-left-color: var(--success); }
+        
+        @keyframes slideIn { 
+            from { transform: translateX(100%); } 
+            to { transform: translateX(0); } 
+        }
+        
+        /* Hilfsklasse zum Verstecken von Elementen */
         .hidden { display: none !important; }
-        .inp { width: 100%; padding: 12px; margin: 8px 0; background: rgba(0,0,0,0.3); border: 1px solid #334155; color: var(--neon); border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 16px; outline: none; box-sizing: border-box; }
-        .btn { width: 100%; padding: 12px; background: var(--neon); border: none; color: black; font-weight: bold; font-size: 16px; cursor: pointer; border-radius: 4px; font-family: 'Rajdhani', sans-serif; transition: 0.2s; }
+
+        /* --- Eingabefelder und Buttons --- */
+        .inp { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid #334155; 
+            color: var(--neon); 
+            border-radius: 4px; 
+            font-family: 'Rajdhani', sans-serif; 
+            font-size: 16px; 
+            outline: none; 
+            box-sizing: border-box; 
+        }
+        .btn { 
+            width: 100%; 
+            padding: 12px; 
+            background: var(--neon); 
+            border: none; 
+            color: black; 
+            font-weight: bold; 
+            font-size: 16px; 
+            cursor: pointer; 
+            border-radius: 4px; 
+            font-family: 'Rajdhani', sans-serif; 
+            transition: 0.2s; 
+        }
         .btn:hover { box-shadow: 0 0 10px var(--neon); }
-        .mini-btn { background: var(--neon); border: none; padding: 0 15px; font-weight: bold; cursor: pointer; border-radius: 4px; color: black; }
+        .mini-btn { 
+            background: var(--neon); 
+            border: none; 
+            padding: 0 15px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 4px; 
+            color: black; 
+        }
         
-        #login-screen { position: absolute; inset: 0; z-index: 1000; background: var(--bg); display: flex; justify-content: center; align-items: center; padding: 20px; }
-        
-        .card { background: var(--panel); border: 1px solid var(--border); padding: 40px; border-radius: 10px; text-align: center; width: 100%; max-width: 650px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        .explanation-box { background: rgba(0,0,0,0.4); border: 1px solid #334155; border-radius: 8px; padding: 20px; text-align: left; margin: 25px 0; color: var(--text-dim); font-size: 17px; line-height: 1.5; }
+        /* --- Login-Screen --- */
+        #login-screen { 
+            position: absolute; 
+            inset: 0; 
+            z-index: 1000; 
+            background: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+        }
+        .card { 
+            background: var(--panel); 
+            border: 1px solid var(--border); 
+            padding: 40px; 
+            border-radius: 10px; 
+            text-align: center; 
+            width: 100%; 
+            max-width: 650px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+        }
+        .explanation-box { 
+            background: rgba(0,0,0,0.4); 
+            border: 1px solid #334155; 
+            border-radius: 8px; 
+            padding: 20px; 
+            text-align: left; 
+            margin: 25px 0; 
+            color: var(--text-dim); 
+            font-size: 17px; 
+            line-height: 1.5; 
+        }
         .explanation-box strong { color: var(--neon); }
 
-        #dashboard { display: flex; width: 100%; height: 100%; opacity: 0; transition: 0.3s; }
+        /* --- Dashboard Grundlayout --- */
+        #dashboard { 
+            display: flex; 
+            width: 100%; 
+            height: 100%; 
+            opacity: 0; 
+            transition: 0.3s; 
+        }
         #dashboard.visible { opacity: 1; }
-        .sidebar { width: 80px; background: #080f1c; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 30px; }
-        .nav-icon { font-size: 24px; color: var(--text-dim); margin-bottom: 20px; padding: 15px; border-radius: 8px; cursor: pointer; }
-        .nav-icon.active { color: var(--neon); background: rgba(0, 242, 255, 0.1); }
-        .content { flex: 1; padding: 30px; display: flex; gap: 30px; overflow-y:auto; }
-        .panel-list { width: 350px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; }
-        .panel-detail { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 30px; position: relative; overflow-y: auto; }
-        .panel-full { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; }
-        .player-item { padding: 12px; margin-bottom: 5px; background: rgba(255,255,255,0.03); border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; }
-        .player-item.selected { background: rgba(0, 242, 255, 0.1); border-left-color: var(--neon); }
-        .player-main { display:flex; flex-direction:column; gap:2px; min-width:0; }
-        .player-name { font-weight:700; display:flex; align-items:center; gap:8px; min-width:0; }
-        .player-sub { font-size:12px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Seitenleiste (Sidebar) */
+        .sidebar { 
+            width: 80px; 
+            background: #080f1c; 
+            border-right: 1px solid var(--border); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 30px; 
+        }
+        .nav-icon { 
+            font-size: 24px; 
+            color: var(--text-dim); 
+            margin-bottom: 20px; 
+            padding: 15px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+        }
+        .nav-icon.active { 
+            color: var(--neon); 
+            background: rgba(0, 242, 255, 0.1); 
+        }
+        
+        /* Hauptinhalt der jeweiligen Tabs */
+        .content { 
+            flex: 1; 
+            padding: 30px; 
+            display: flex; 
+            gap: 30px; 
+            overflow-y: auto; 
+        }
+        
+        /* --- Panels (Listen und Detailansichten) --- */
+        .panel-list { 
+            width: 350px; 
+            background: var(--panel); 
+            border: 1px solid var(--border); 
+            border-radius: 10px; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .panel-detail { 
+            flex: 1; 
+            background: var(--panel); 
+            border: 1px solid var(--border); 
+            border-radius: 10px; 
+            padding: 30px; 
+            position: relative; 
+            overflow-y: auto; 
+        }
+        .panel-full { 
+            flex: 1; 
+            background: var(--panel); 
+            border: 1px solid var(--border); 
+            border-radius: 10px; 
+            padding: 20px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        /* --- Spielerliste Styling --- */
+        .player-item { 
+            padding: 12px; 
+            margin-bottom: 5px; 
+            background: rgba(255,255,255,0.03); 
+            border-radius: 6px; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-left: 3px solid transparent; 
+        }
+        .player-item.selected { 
+            background: rgba(0, 242, 255, 0.1); 
+            border-left-color: var(--neon); 
+        }
+        .player-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .player-name { font-weight: 700; display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .player-sub { font-size: 12px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .p-id-badge { background: black; color: #888; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+        
+        /* Fortschrittsbalken (HP & Armor) */
         .bar-container { width: 100%; background: #222; height: 8px; border-radius: 4px; margin-top: 5px; overflow: hidden; }
         .bar-val { height: 100%; transition: width 0.3s; }
+        
+        /* Aktions-Grid (Buttons bei den Spielerdetails) */
         .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .action-card { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border: 1px solid #333; }
         .action-card span { font-size: 12px; color: #888; font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; }
         .input-group { display: flex; gap: 10px; }
+        
+        /* Gefahrenzone (Bans / Kicks) */
         .danger-zone { border: 1px solid var(--danger); background: rgba(255, 42, 109, 0.05); padding: 20px; border-radius: 8px; margin-top: 20px; }
         .danger-zone-title { color: var(--danger); font-weight: bold; margin-bottom: 15px; display: block; }
-        .btn-refund { background: var(--refund); color: white; } .btn-red { background: var(--danger); color: white; } .btn-inv { background: rgba(0, 242, 255, 0.15); border: 1px solid rgba(0, 242, 255, 0.35); color: var(--neon); }
+        
+        /* Spezifische Button-Farben */
+        .btn-refund { background: var(--refund); color: white; } 
+        .btn-red { background: var(--danger); color: white; } 
+        .btn-inv { background: rgba(0, 242, 255, 0.15); border: 1px solid rgba(0, 242, 255, 0.35); color: var(--neon); }
         .ban-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid var(--danger); }
         
-        #invModal { position: fixed; inset: 0; z-index: 5000; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        /* --- Inventar Modal (Popup) --- */
+        #invModal { 
+            position: fixed; 
+            inset: 0; 
+            z-index: 5000; 
+            background: rgba(0,0,0,0.8); 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            backdrop-filter: blur(10px); 
+        }
         #invModal.show { display: flex; }
-        .inv-wrap { width: min(980px, 95vw); height: min(760px, 90vh); background: var(--panel); border: 1px solid rgba(0,242,255,0.3); border-radius: 12px; position: relative; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.9); }
+        .inv-wrap { 
+            width: min(980px, 95vw); 
+            height: min(760px, 90vh); 
+            background: var(--panel); 
+            border: 1px solid rgba(0,242,255,0.3); 
+            border-radius: 12px; 
+            position: relative; 
+            overflow: hidden; 
+            box-shadow: 0 25px 80px rgba(0,0,0,0.9); 
+        }
         .inv-title { position: absolute; top: 16px; left: 0; right: 0; text-align: center; font-size: 26px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--neon); }
         .inv-topbar { position: absolute; top: 62px; left: 20px; right: 20px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: center; }
-        .inv-search { height: 38px; border-radius: 6px; border: 1px solid #334155; background: rgba(0,0,0,0.5); color: #fff; padding: 0 15px; font-family: 'Rajdhani', sans-serif; font-size: 15px; outline:none; }
+        .inv-search { height: 38px; border-radius: 6px; border: 1px solid #334155; background: rgba(0,0,0,0.5); color: #fff; padding: 0 15px; font-family: 'Rajdhani', sans-serif; font-size: 15px; outline: none; }
         .inv-search:focus { border-color: var(--neon); }
-        .inv-actions { display:flex; gap:10px; }
-        .inv-btn { border: 1px solid #334155; background: rgba(0,0,0,0.5); color: #fff; padding: 8px 15px; border-radius: 6px; cursor:pointer; font-family: 'Rajdhani', sans-serif; font-weight: 700; transition: 0.2s;}
-        .inv-btn.danger { border-color: rgba(255,42,109,0.45); color: var(--danger); } .inv-btn:hover { background: rgba(255,255,255,0.1); }
-        .inv-info { position: absolute; top: 115px; left: 20px; right: 20px; display:flex; gap:10px; flex-wrap: wrap; color: var(--text-dim); font-weight: 700; }
+        .inv-actions { display: flex; gap: 10px; }
+        .inv-btn { border: 1px solid #334155; background: rgba(0,0,0,0.5); color: #fff; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-weight: 700; transition: 0.2s; }
+        .inv-btn.danger { border-color: rgba(255,42,109,0.45); color: var(--danger); } 
+        .inv-btn:hover { background: rgba(255,255,255,0.1); }
+        .inv-info { position: absolute; top: 115px; left: 20px; right: 20px; display: flex; gap: 10px; flex-wrap: wrap; color: var(--text-dim); font-weight: 700; }
         .chip { background: rgba(0, 242, 255, 0.1); border: 1px solid rgba(0, 242, 255, 0.3); border-radius: 6px; padding: 6px 12px; color: var(--neon); font-size: 14px; }
         
-        .inv-grid { position: absolute; top: 165px; left: 20px; right: 20px; bottom: 20px; background: rgba(5, 10, 20, 0.9); border: 1px solid rgba(0, 242, 255, 0.1); border-radius: 8px; padding: 20px; display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); grid-auto-rows: 140px; gap: 15px; overflow-y: auto; }
-        .inv-grid::-webkit-scrollbar { width: 6px; } .inv-grid::-webkit-scrollbar-thumb { background: rgba(0, 242, 255, 0.5); border-radius: 10px; }
+        /* Inventar Grid (Slots) */
+        .inv-grid { 
+            position: absolute; top: 165px; left: 20px; right: 20px; bottom: 20px; 
+            background: rgba(5, 10, 20, 0.9); 
+            border: 1px solid rgba(0, 242, 255, 0.1); 
+            border-radius: 8px; 
+            padding: 20px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+            grid-auto-rows: 140px; 
+            gap: 15px; 
+            overflow-y: auto; 
+        }
+        .inv-grid::-webkit-scrollbar { width: 6px; } 
+        .inv-grid::-webkit-scrollbar-thumb { background: rgba(0, 242, 255, 0.5); border-radius: 10px; }
         
-        .slot { background: linear-gradient(145deg, rgba(20,30,50,0.9), rgba(10,15,25,0.9)); border: 1px solid rgba(51, 65, 85, 0.8); border-radius: 10px; position: relative; overflow: hidden; padding: 15px; display:flex; flex-direction: column; align-items:center; text-align:center; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .slot { background: linear-gradient(145deg, rgba(20,30,50,0.9), rgba(10,15,25,0.9)); border: 1px solid rgba(51, 65, 85, 0.8); border-radius: 10px; position: relative; overflow: hidden; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .slot:hover { border-color: var(--neon); box-shadow: 0 0 15px rgba(0, 242, 255, 0.3); transform: translateY(-3px); }
-        .slot .count { position:absolute; top:8px; right:8px; padding: 3px 8px; border-radius: 6px; background: rgba(0, 242, 255, 0.2); border: 1px solid var(--neon); font-size: 12px; font-weight: bold; color:var(--neon); }
-        .slot .icon { height: 60px; display:flex; align-items:center; justify-content:center; font-size:40px; color: #cbd5e1; margin-bottom: 5px; } 
-        .slot .label { font-size: 14px; font-weight: 700; color: white; width: 100%; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; } 
-        .slot .name { font-size: 11px; color: var(--text-dim); width: 100%; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+        .slot .count { position: absolute; top: 8px; right: 8px; padding: 3px 8px; border-radius: 6px; background: rgba(0, 242, 255, 0.2); border: 1px solid var(--neon); font-size: 12px; font-weight: bold; color: var(--neon); }
+        .slot .icon { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: #cbd5e1; margin-bottom: 5px; } 
+        .slot .label { font-size: 14px; font-weight: 700; color: white; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } 
+        .slot .name { font-size: 11px; color: var(--text-dim); width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        /* Rechteverteilung Checkboxen */
         .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; margin-top: 15px; }
-        .perm-grid label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ddd; cursor: pointer; transition: 0.2s;}
+        .perm-grid label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ddd; cursor: pointer; transition: 0.2s; }
         .perm-grid input { width: 16px; height: 16px; cursor: pointer; }
         
+        /* Todo-Liste Styling */
         .todo-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
+    
     <div id="statusPill" style="position:fixed;bottom:14px;right:14px;z-index:3000;padding:8px 10px;border-radius:999px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.15);color:#fff;font-weight:700;font-size:12px;backdrop-filter:blur(8px);">API: Offline</div>
 
     <div id="login-screen">
@@ -119,12 +367,17 @@
             <button class="inv-btn" onclick="window.closeInventory()"><i class="fas fa-times"></i></button>
           </div>
         </div>
-        <div class="inv-info"><span class="chip" id="invCash">Cash: 0$</span><span class="chip" id="invBank">Bank: 0$</span><span class="chip" id="invCounts">Slots: 0</span></div>
+        <div class="inv-info">
+            <span class="chip" id="invCash">Cash: 0$</span>
+            <span class="chip" id="invBank">Bank: 0$</span>
+            <span class="chip" id="invCounts">Slots: 0</span>
+        </div>
         <div class="inv-grid" id="invGrid"></div>
       </div>
     </div>
 
     <div id="dashboard" class="hidden">
+        
         <div class="sidebar">
             <img src="3d.png" onerror="this.onerror=null; this.src='3d.jpg';" style="width:50px; border-radius:0; border:none; margin-bottom:30px; filter: drop-shadow(0 0 5px rgba(0, 242, 255, 0.5));">
             <div class="nav-icon active" onclick="window.switchTab('players', event)" title="Spieler"><i class="fas fa-users"></i></div>
@@ -148,7 +401,10 @@
                 </div>
                 <div id="playerDetailContent" class="hidden">
                     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px;">
-                        <div><h1 id="pName" style="margin:0; font-size:36px; color:var(--neon);">Name</h1><span id="pID" class="p-id-badge" style="font-size:16px;">ID: 0</span></div>
+                        <div>
+                            <h1 id="pName" style="margin:0; font-size:36px; color:var(--neon);">Name</h1>
+                            <span id="pID" class="p-id-badge" style="font-size:16px;">ID: 0</span>
+                        </div>
                         <div style="display:flex; gap:10px;">
                             <button class="btn" style="background:#8b5cf6; color:white; width:auto; padding:8px 15px;" onclick="window.notify('Nutze F10 Ingame, um live zuzuschauen & Screenshots zu machen!', 'info')"><i class="fas fa-eye"></i> Spectate (Ingame)</button>
                             <button class="btn btn-inv" style="width:auto; padding:8px 15px;" onclick="window.openInventory()"><i class="fas fa-box-open"></i> INVENTAR</button>
@@ -227,7 +483,8 @@
         <div id="page-bans" class="content hidden">
             <div class="panel-list" style="width: 100%; flex:1;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2 style="color:var(--danger); margin:0;">BANNLISTE</h2><button class="mini-btn" onclick="window.fetchBans()" style="background:transparent; border:1px solid var(--neon); color:var(--neon); padding:10px;"><i class="fas fa-sync"></i> Aktualisieren</button>
+                    <h2 style="color:var(--danger); margin:0;">BANNLISTE</h2>
+                    <button class="mini-btn" onclick="window.fetchBans()" style="background:transparent; border:1px solid var(--neon); color:var(--neon); padding:10px;"><i class="fas fa-sync"></i> Aktualisieren</button>
                 </div>
                 <div id="banListContainer" style="overflow-y:auto; flex:1;"></div>
             </div>
@@ -274,11 +531,23 @@
     </div>
 
     <script>
-        // --- GRUNDLEGENDE FUNKTIONEN ---
-        function escapeHtml(str) { return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
-        window.notify = (msg, type='success') => { const container = document.getElementById('toast-container'); const div = document.createElement('div'); div.className = `toast ${type}`; div.innerHTML = `<span>${window.escapeHtml(msg)}</span>`; container.appendChild(div); setTimeout(() => div.remove(), 3500); };
+        // --- GRUNDLEGENDE HILFSFUNKTIONEN ---
+        // Verhindert HTML-Injection (Sicherheit)
+        function escapeHtml(str) { 
+            return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); 
+        }
+        
+        // Zeigt die Pop-up Benachrichtigungen (Toasts) oben rechts an
+        window.notify = (msg, type='success') => { 
+            const container = document.getElementById('toast-container'); 
+            const div = document.createElement('div'); 
+            div.className = `toast ${type}`; 
+            div.innerHTML = `<span>${window.escapeHtml(msg)}</span>`; 
+            container.appendChild(div); 
+            setTimeout(() => div.remove(), 3500); 
+        };
 
-        // --- FESTE TESTDATEN FÜR SHOWCASE ---
+        // --- FESTE TESTDATEN FÜR SHOWCASE (Normalerweise kommen die per API/Firebase) ---
         // Test-Spieler Liste
         window.dummyPlayers = [
             { id: 1, name: "Calin", job: "Projektleitung", health: 100, armor: 100, isAdmin: true },
@@ -302,7 +571,7 @@
             ]
         };
 
-        // Standard Todos initialisieren (Nur beim allerersten Laden)
+        // Standard Todos initialisieren (Wird im lokalen Speicher des Browsers gespeichert)
         if (!localStorage.getItem('republica_todos_init')) {
             const defaultTodos = [
                 { id: "t1", task: "Admin Panel Showcase vorbereiten", description: "Die UI zeigen und die Anbindung an die Server REST-API sowie die Firebase-Architektur erklären.", priority: "medium", status: "done", created: Date.now() - 50000 },
@@ -313,7 +582,7 @@
             localStorage.setItem('republica_todos_init', 'true');
         }
 
-        // Standard Team initialisieren
+        // Standard Team initialisieren (Lokaler Speicher)
         if (!localStorage.getItem('republica_team_init')) {
             const defaultTeam = [
                 { id: "a1", email: "calin@republica.com", discord: "Calin#1234", rank: "Projektleitung", isMaster: true, perms: ["revive", "heal", "kick", "ban", "giveitem", "giveweapon", "givemoney", "spawncar"] },
@@ -323,26 +592,31 @@
             localStorage.setItem('republica_team_init', 'true');
         }
 
-        window.allPlayers = []; window.selectedId = null; window.invOpen = false;
+        // Globale Variablen
+        window.allPlayers = []; 
+        window.selectedId = null; 
+        window.invOpen = false;
 
-        // --- DASHBOARD START ---
+        // --- DASHBOARD STEUERUNG ---
+        // Wird beim Klicken auf "Showcase Starten" ausgeführt
         window.enterPanel = () => {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
+            // Timeout für weiche Einblend-Animation
             setTimeout(() => document.getElementById('dashboard').classList.add('visible'), 50);
             
-            // Lade UI Daten
+            // Lade alle Dummy-Daten in die Oberfläche
             window.loadShowcasePlayers();
             window.fetchAdmins();
             window.loadTodos();
             
-            // Setze den API Status Indikator auf "Showcase"
+            // Setze den API Status Indikator unten rechts auf "Showcase"
             document.getElementById("statusPill").textContent = "API: Showcase Modus";
             document.getElementById("statusPill").style.borderColor = 'var(--neon)';
             document.getElementById("statusPill").style.color = 'var(--neon)';
         };
 
-        // --- TAB STEUERUNG ---
+        // Wechselt zwischen den verschiedenen Seiten (Spieler, Banns, Todos, Team)
         window.switchTab = (tab, ev) => { 
             document.querySelectorAll('.content').forEach(el => el.classList.add('hidden')); 
             document.getElementById('page-'+tab).classList.remove('hidden'); 
@@ -350,119 +624,203 @@
             if(ev && ev.currentTarget) ev.currentTarget.classList.add('active'); 
         };
 
-        // --- SPIELER LISTE (SHOWCASE) ---
+        // --- SPIELER LISTE LOGIK ---
         window.loadShowcasePlayers = () => {
             window.allPlayers = window.dummyPlayers;
             window.renderList();
         };
 
-        window.scheduleRenderList = () => { setTimeout(() => window.renderList(), 120); };
+        // Verzögert das Suchen leicht, damit nicht bei jedem einzelnen Tastendruck sofort gerendert wird
+        window.scheduleRenderList = () => { 
+            setTimeout(() => window.renderList(), 120); 
+        };
 
+        // Baut die Spielerliste HTML-Elemente auf
         window.renderList = () => {
-            const list = document.getElementById('playerList'); const term = (document.getElementById('search').value || "").toLowerCase().trim(); list.innerHTML = "";
-            window.allPlayers.filter(p => { const n = (p.name || "").toLowerCase(); const id = String(p.id || ""); return term === "" || n.includes(term) || id.includes(term); }).forEach(p => {
-                const div = document.createElement('div'); div.className = `player-item ${window.selectedId == p.id ? 'selected' : ''}`;
+            const list = document.getElementById('playerList'); 
+            const term = (document.getElementById('search').value || "").toLowerCase().trim(); 
+            list.innerHTML = "";
+            
+            window.allPlayers.filter(p => { 
+                const n = (p.name || "").toLowerCase(); 
+                const id = String(p.id || ""); 
+                return term === "" || n.includes(term) || id.includes(term); 
+            }).forEach(p => {
+                const div = document.createElement('div'); 
+                div.className = `player-item ${window.selectedId == p.id ? 'selected' : ''}`;
+                
                 let adminBadge = p.isAdmin ? '<span style="background:var(--team); color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:4px; margin-left:8px; box-shadow: 0 0 8px rgba(59,130,246,0.6);">TEAM</span>' : '';
+                
                 div.innerHTML = `<div class="player-main"><div class="player-name">${window.escapeHtml(p.name)} ${adminBadge}</div><div class="player-sub">${window.escapeHtml(p.job || "Unbekannt")} | HP ${Number(p.health || 0)} | Armor ${Number(p.armor || 0)}</div></div><span class="p-id-badge">${p.id}</span>`;
-                div.onclick = () => window.selectPlayer(p); list.appendChild(div);
+                
+                div.onclick = () => window.selectPlayer(p); 
+                list.appendChild(div);
             });
         };
 
+        // Wird aufgerufen, wenn man einen Spieler in der Liste anklickt
         window.selectPlayer = p => { 
-            window.selectedId = p.id; window.renderList(); 
+            window.selectedId = p.id; 
+            window.renderList(); // Liste neu laden für die grüne Markierung
             document.getElementById('emptyState').classList.add('hidden'); 
             document.getElementById('playerDetailContent').classList.remove('hidden'); 
+            
+            // Füllt die Rechten-Details aus
             document.getElementById('pName').innerHTML = `${window.escapeHtml(p.name)} <span class="p-id" style="font-size:16px;">ID: ${p.id}</span>`; 
             document.getElementById('hpBar').style.width = (p.health||0) + "%"; 
             document.getElementById('armorBar').style.width = (p.armor||0) + "%"; 
         };
         
-        window.deselect = () => { window.selectedId = null; document.getElementById('emptyState').classList.remove('hidden'); document.getElementById('playerDetailContent').classList.add('hidden'); window.closeInventory(); window.renderList(); };
+        // Spieler abwählen
+        window.deselect = () => { 
+            window.selectedId = null; 
+            document.getElementById('emptyState').classList.remove('hidden'); 
+            document.getElementById('playerDetailContent').classList.add('hidden'); 
+            window.closeInventory(); 
+            window.renderList(); 
+        };
 
-        // --- INVENTAR SYSTEM (SHOWCASE) ---
-        window.openInventory = () => { if(!window.selectedId) return window.notify("Kein Spieler ausgewählt","error"); window.invOpen = true; document.getElementById('invModal').classList.add('show'); document.getElementById('invOwner').value = `Spieler ID: ${window.selectedId}`; window.renderInventory(window.dummyInventory); }; 
-        window.closeInventory = () => { window.invOpen = false; document.getElementById('invModal').classList.remove('show'); }; 
-        window.refreshInventory = () => { window.renderInventory(window.dummyInventory); window.notify("Inventar neu geladen", "success"); };
+        // --- INVENTAR SYSTEM LOGIK ---
+        window.openInventory = () => { 
+            if(!window.selectedId) return window.notify("Kein Spieler ausgewählt","error"); 
+            window.invOpen = true; 
+            document.getElementById('invModal').classList.add('show'); 
+            document.getElementById('invOwner').value = `Spieler ID: ${window.selectedId}`; 
+            window.renderInventory(window.dummyInventory); 
+        }; 
+        
+        window.closeInventory = () => { 
+            window.invOpen = false; 
+            document.getElementById('invModal').classList.remove('show'); 
+        }; 
+        
+        window.refreshInventory = () => { 
+            window.renderInventory(window.dummyInventory); 
+            window.notify("Inventar neu geladen", "success"); 
+        };
 
+        // Baut die HTML-Slots für das Inventar auf
         window.renderInventory = data => {
-            document.getElementById('invCash').innerText = `Cash: ${data.money?.cash ?? 0}$`; document.getElementById('invBank').innerText = `Bank: ${data.money?.bank ?? 0}$`;
-            const search = (document.getElementById('invSearch').value || "").toLowerCase(); const items = Array.isArray(data.items) ? data.items : []; const weapons = Array.isArray(data.weapons) ? data.weapons : [];
+            document.getElementById('invCash').innerText = `Cash: ${data.money?.cash ?? 0}$`; 
+            document.getElementById('invBank').innerText = `Bank: ${data.money?.bank ?? 0}$`;
+            
+            const search = (document.getElementById('invSearch').value || "").toLowerCase(); 
+            const items = Array.isArray(data.items) ? data.items : []; 
+            const weapons = Array.isArray(data.weapons) ? data.weapons : [];
+            
+            // Kombiniert Items und Waffen zu einer Liste
             const merged = items.map(x=>({kind:"item", ...x})).concat(weapons.map(w=>({kind:"weapon", name:w.name, label:w.label||w.name, count:(w.ammo||0), ammo:(w.ammo||0)})));
             const filtered = merged.filter(it => (`${it.label||""} ${it.name||""}`).toLowerCase().includes(search));
-            document.getElementById('invCounts').innerText = `Slots: ${filtered.length}`; const grid = document.getElementById('invGrid'); grid.innerHTML = "";
-            if(filtered.length === 0){ grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color: var(--text-dim); padding: 30px 0; font-size:18px;">Keine Items gefunden</div>`; return; }
+            
+            document.getElementById('invCounts').innerText = `Slots: ${filtered.length}`; 
+            const grid = document.getElementById('invGrid'); 
+            grid.innerHTML = "";
+            
+            if(filtered.length === 0){ 
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color: var(--text-dim); padding: 30px 0; font-size:18px;">Keine Items gefunden</div>`; 
+                return; 
+            }
+            
+            // Schleife durch alle gefilterten Items, um Slots zu erstellen
             filtered.forEach(it=>{ 
-                const div=document.createElement('div'); div.className="slot"; const countText = it.kind==="weapon" ? `${it.ammo||0} Ammo` : `x${it.count||0}`; const iconHtml = it.kind==="weapon" ? '<i class="fas fa-crosshairs"></i>' : '<i class="fas fa-box-open"></i>'; 
-                div.innerHTML = `<div class="count">${window.escapeHtml(countText)}</div><div class="icon">${iconHtml}</div><div class="label">${window.escapeHtml(it.label||it.name)}</div><div class="name">${window.escapeHtml(it.name||"")}</div>`; grid.appendChild(div); 
+                const div=document.createElement('div'); 
+                div.className="slot"; 
+                const countText = it.kind==="weapon" ? `${it.ammo||0} Ammo` : `x${it.count||0}`; 
+                const iconHtml = it.kind==="weapon" ? '<i class="fas fa-crosshairs"></i>' : '<i class="fas fa-box-open"></i>'; 
+                
+                div.innerHTML = `<div class="count">${window.escapeHtml(countText)}</div><div class="icon">${iconHtml}</div><div class="label">${window.escapeHtml(it.label||it.name)}</div><div class="name">${window.escapeHtml(it.name||"")}</div>`; 
+                grid.appendChild(div); 
             });
         };
 
         window.clearInventory = (withWeapons) => { 
-            if(!window.selectedId) return; if(!confirm(withWeapons ? "Inventar + Waffen wirklich clearen?" : "Inventar wirklich clearen?")) return; 
+            if(!window.selectedId) return; 
+            if(!confirm(withWeapons ? "Inventar + Waffen wirklich clearen?" : "Inventar wirklich clearen?")) return; 
+            
             window.notify("Befehl an Server gesendet: Inventar geleert", "success");
-            // Leert das Test-Inventar optisch
+            // Leert das Test-Inventar optisch (Simulation)
             window.dummyInventory.items = [];
             if(withWeapons) window.dummyInventory.weapons = [];
             window.refreshInventory();
         };
 
-        // --- AKTIONEN AN FIVEM SENDEN (MOCK FÜR SHOWCASE) ---
+        // --- AKTIONEN AN FIVEM SENDEN (Simulation) ---
         window.sendAction = action => {
             if(!window.selectedId) return; 
             
-            // Simuliert einen HTTP Request
+            // Simuliert einen erfolgreichen HTTP Request an die API
             window.notify("Befehl (" + action.toUpperCase() + ") erfolgreich an FiveM API gesendet!", "success");
             
-            // Kleine grafische Effekte für den Showcase (z.B. Heilung)
+            // Kleine grafische Effekte für den Showcase (z.B. Heilung wird sofort angezeigt)
             if(action === 'revive' || action === 'heal') {
                 const p = window.allPlayers.find(x => x.id == window.selectedId);
-                if(p) { p.health = 100; document.getElementById('hpBar').style.width = "100%"; }
+                if(p) { 
+                    p.health = 100; 
+                    document.getElementById('hpBar').style.width = "100%"; 
+                }
             }
         };
 
+        // --- BANNLISTE LOGIK ---
         window.fetchBans = () => { 
-            const list = document.getElementById('banListContainer'); list.innerHTML = ""; 
-            // Fake Ban für den Showcase
+            const list = document.getElementById('banListContainer'); 
+            list.innerHTML = ""; 
+            
+            // Fake Ban für den Showcase generieren
             const b = { name: "TrollGamer99", license: "license:29f8a8s7d...", reason: "VDM am Würfelpark", expire: 0 };
-            const div = document.createElement('div'); div.className = "ban-item"; 
+            const div = document.createElement('div'); 
+            div.className = "ban-item"; 
+            
             div.innerHTML = `<div style="color:white; margin:0;"><h4 style="margin:0;">${window.escapeHtml(b.name)} <small style="color:var(--text-dim);">(${window.escapeHtml(b.license)})</small></h4><small style="color:var(--text-dim);">Grund: ${window.escapeHtml(b.reason)} | Permanent</small></div><button class="mini-btn" onclick="window.notify('Spieler entbannt (Showcase)', 'success'); this.parentElement.remove();">FREIGEBEN</button>`; 
+            
             list.appendChild(div); 
         };
 
-        // --- TEAM SYSTEM (LOCALSTORAGE) ---
+        // --- TEAM SYSTEM LOGIK (Lokal gespeichert) ---
         window.editingDocId = null;
 
+        // Lädt die Admins aus dem Browser-Speicher
         window.fetchAdmins = () => {
             const mockTeam = JSON.parse(localStorage.getItem('republica_team')) || [];
-            const list = document.getElementById('adminListContainer'); list.innerHTML = "";
+            const list = document.getElementById('adminListContainer'); 
+            list.innerHTML = "";
             window.adminDataCache = {};
             
             mockTeam.forEach(data => {
                 window.adminDataCache[data.id] = data;
                 const badge = data.isMaster ? '<span style="background:var(--warning);color:black;padding:2px 5px;border-radius:3px;font-size:10px;margin-left:10px;font-weight:bold;">MASTER</span>' : '';
+                
                 list.innerHTML += `<div class="ban-item" style="border-left-color:var(--success);"><div style="color:white; margin:0;"><h4 style="margin:0; font-size:15px;">Discord: ${window.escapeHtml(data.discord)} ${badge}</h4><small style="color:var(--text-dim);">E-Mail: ${window.escapeHtml(data.email)} | Rang: ${window.escapeHtml(data.rank)}</small></div><div><button class="btn-dash" style="background:transparent; border:1px solid var(--warning); color:var(--warning); padding:5px 10px; margin-right:5px; cursor:pointer;" onclick="window.editAdmin('${data.id}')">BEARBEITEN</button><button class="btn-dash" style="background:transparent; border:1px solid var(--danger); color:var(--danger); padding:5px 10px; cursor:pointer;" onclick="window.removeAdmin('${data.id}')">ENTFERNEN</button></div></div>`;
             });
         };
 
+        // Speichert einen neuen Admin oder bearbeitet einen bestehenden
         window.saveTeamAccount = () => {
             const email = document.getElementById('tEmail').value.toLowerCase();
             const pass = document.getElementById('tPass').value;
             const discordId = document.getElementById('tDiscord').value.trim();
             const rank = document.getElementById('tRank').value;
             const makeMaster = document.getElementById('tMaster').checked;
+            
+            // Sammelt alle ausgewählten Checkboxen für Rechte
             const selectedPerms = Array.from(document.querySelectorAll('#perm-checkboxes input:checked')).map(cb => cb.value);
 
             if(!email || !discordId) return window.notify("Email und Discord ID erforderlich!", "error");
 
             let mockTeam = JSON.parse(localStorage.getItem('republica_team')) || [];
 
+            // Wenn gerade jemand bearbeitet wird
             if(window.editingDocId) {
                 const index = mockTeam.findIndex(t => t.id === window.editingDocId);
                 if(index !== -1) {
-                    mockTeam[index].discord = discordId; mockTeam[index].rank = rank; mockTeam[index].isMaster = makeMaster; mockTeam[index].perms = selectedPerms;
+                    mockTeam[index].discord = discordId; 
+                    mockTeam[index].rank = rank; 
+                    mockTeam[index].isMaster = makeMaster; 
+                    mockTeam[index].perms = selectedPerms;
                 }
                 window.notify("Admin aktualisiert", "success");
             } else {
+                // Wenn ein neuer Admin erstellt wird
                 if(pass.length < 6) return window.notify("Passwort muss min. 6 Zeichen lang sein!", "error");
                 const newAdmin = { id: Date.now().toString(), email: email, discord: discordId, rank: rank, isMaster: makeMaster, perms: selectedPerms };
                 mockTeam.push(newAdmin);
@@ -474,25 +832,47 @@
             window.fetchAdmins();
         };
 
+        // Füllt das Formular mit den Daten des anzupassenden Admins
         window.editAdmin = (id) => {
-            const data = window.adminDataCache[id]; if(!data) return;
+            const data = window.adminDataCache[id]; 
+            if(!data) return;
+            
             document.getElementById('form-title').innerText = "ADMIN BEARBEITEN";
-            document.getElementById('tEmail').value = data.email || ""; document.getElementById('tEmail').disabled = true; 
-            document.getElementById('tPass').value = "********"; document.getElementById('tPass').disabled = true; 
-            document.getElementById('tDiscord').value = data.discord || ""; document.getElementById('tRank').value = data.rank || "Supporter";
+            document.getElementById('tEmail').value = data.email || ""; 
+            document.getElementById('tEmail').disabled = true; 
+            document.getElementById('tPass').value = "********"; 
+            document.getElementById('tPass').disabled = true; 
+            document.getElementById('tDiscord').value = data.discord || ""; 
+            document.getElementById('tRank').value = data.rank || "Supporter";
             document.getElementById('tMaster').checked = !!data.isMaster;
-            const perms = data.perms || []; document.querySelectorAll('#perm-checkboxes input').forEach(cb => { cb.checked = perms.includes(cb.value); });
-            document.getElementById('btn-create-admin').innerText = "ÄNDERUNGEN SPEICHERN"; document.getElementById('btn-create-admin').style.background = "var(--warning)"; document.getElementById('btn-cancel-edit').style.display = "inline-block";
+            
+            // Hakt die richtigen Checkboxen an
+            const perms = data.perms || []; 
+            document.querySelectorAll('#perm-checkboxes input').forEach(cb => { cb.checked = perms.includes(cb.value); });
+            
+            document.getElementById('btn-create-admin').innerText = "ÄNDERUNGEN SPEICHERN"; 
+            document.getElementById('btn-create-admin').style.background = "var(--warning)"; 
+            document.getElementById('btn-cancel-edit').style.display = "inline-block";
             window.editingDocId = id;
         };
 
+        // Setzt das Admin-Formular zurück
         window.cancelEditAdmin = () => {
-            window.editingDocId = null; document.getElementById('form-title').innerText = "NEUEN ADMIN ANLEGEN";
-            document.getElementById('tEmail').value = ""; document.getElementById('tEmail').disabled = false;
-            document.getElementById('tPass').value = ""; document.getElementById('tPass').disabled = false;
-            document.getElementById('tDiscord').value = ""; document.getElementById('tRank').value = "Supporter"; document.getElementById('tMaster').checked = false;
+            window.editingDocId = null; 
+            document.getElementById('form-title').innerText = "NEUEN ADMIN ANLEGEN";
+            document.getElementById('tEmail').value = ""; 
+            document.getElementById('tEmail').disabled = false;
+            document.getElementById('tPass').value = ""; 
+            document.getElementById('tPass').disabled = false;
+            document.getElementById('tDiscord').value = ""; 
+            document.getElementById('tRank').value = "Supporter"; 
+            document.getElementById('tMaster').checked = false;
+            
             document.querySelectorAll('#perm-checkboxes input').forEach(cb => cb.checked = false );
-            document.getElementById('btn-create-admin').innerText = "ACCOUNT ERSTELLEN"; document.getElementById('btn-create-admin').style.background = "var(--neon)"; document.getElementById('btn-cancel-edit').style.display = "none";
+            
+            document.getElementById('btn-create-admin').innerText = "ACCOUNT ERSTELLEN"; 
+            document.getElementById('btn-create-admin').style.background = "var(--neon)"; 
+            document.getElementById('btn-cancel-edit').style.display = "none";
         };
 
         window.removeAdmin = (id) => {
@@ -504,29 +884,55 @@
             window.fetchAdmins();
         };
 
-        // --- TODO SYSTEM (LOCALSTORAGE) ---
+        // --- TODO SYSTEM LOGIK (Lokal gespeichert) ---
         window.editingTodoId = null;
 
         window.loadTodos = () => {
             const mockTodos = JSON.parse(localStorage.getItem('republica_todos')) || [];
-            const listOpen = document.getElementById('todoList'); const listDone = document.getElementById('changelogList'); 
-            listOpen.innerHTML = ""; listDone.innerHTML = ""; window.todoDataCache = {};
+            const listOpen = document.getElementById('todoList'); 
+            const listDone = document.getElementById('changelogList'); 
             
+            listOpen.innerHTML = ""; 
+            listDone.innerHTML = ""; 
+            window.todoDataCache = {};
+            
+            // Sortiert nach Datum und generiert HTML
             mockTodos.sort((a,b) => b.created - a.created).forEach(d => {
                 window.todoDataCache[d.id] = d;
-                let pC = "var(--warning)"; let pText = "MITTEL"; if(d.priority === "high") { pC = "var(--danger)"; pText = "HOCH"; } if(d.priority === "low") { pC = "var(--success)"; pText = "NIEDRIG"; } 
-                let sC = "var(--text-dim)"; let sText = "OFFEN"; if(d.status === "progress") { sC = "var(--warning)"; sText = "BEARBEITUNG"; } if(d.status === "done") { sC = "var(--success)"; sText = "FERTIG"; }
+                
+                // Farben und Texte für Priorität setzen
+                let pC = "var(--warning)"; let pText = "MITTEL"; 
+                if(d.priority === "high") { pC = "var(--danger)"; pText = "HOCH"; } 
+                if(d.priority === "low") { pC = "var(--success)"; pText = "NIEDRIG"; } 
+                
+                // Farben und Texte für Status setzen
+                let sC = "var(--text-dim)"; let sText = "OFFEN"; 
+                if(d.status === "progress") { sC = "var(--warning)"; sText = "BEARBEITUNG"; } 
+                if(d.status === "done") { sC = "var(--success)"; sText = "FERTIG"; }
                 
                 const actionIcons = `<div style="display:flex; gap:12px;"><i class="fas fa-pen" style="color:var(--neon); cursor:pointer; font-size:14px;" title="Bearbeiten" onclick="window.editTodo('${d.id}')"></i><i class="fas fa-trash" style="color:var(--danger); cursor:pointer; font-size:14px;" title="Löschen" onclick="window.delTodo('${d.id}')"></i></div>`;
-                const div = document.createElement('div'); div.className = `todo-item`; div.style.flexDirection = "column"; div.style.alignItems = "flex-start";
+                const div = document.createElement('div'); 
+                div.className = `todo-item`; 
+                div.style.flexDirection = "column"; 
+                div.style.alignItems = "flex-start";
+                
                 div.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%; margin-bottom: ${d.description ? '10px' : '0'};"><div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;"><span style="font-size: 10px; padding: 2px 6px; border-radius: 3px; color:black; font-weight: bold; background: ${pC}">${pText}</span><span style="font-size: 10px; padding: 1px 5px; border-radius: 3px; border: 1px solid ${sC}; color: ${sC}; font-weight: bold;">${sText}</span><strong style="color:white; font-size:16px;">${window.escapeHtml(d.task)}</strong></div>${actionIcons}</div>${d.description ? `<div style="font-size:13px; color:var(--text-dim); white-space:pre-wrap; width:100%; background:rgba(0,0,0,0.2); padding:8px; border-radius:4px; border-left:2px solid #334155; box-sizing:border-box;">${window.escapeHtml(d.description)}</div>` : ''}`; 
                 
-                if(d.status === "done") { listDone.appendChild(div); } else { listOpen.appendChild(div); }
+                if(d.status === "done") { 
+                    listDone.appendChild(div); 
+                } else { 
+                    listOpen.appendChild(div); 
+                }
             });
         };
 
+        // Speichert neues Todo oder Update
         window.saveTodo = () => { 
-            const txt = document.getElementById('todoInput').value; const desc = document.getElementById('todoDesc').value; const prio = document.getElementById('todoPriority').value; const status = document.getElementById('todoStatus').value;
+            const txt = document.getElementById('todoInput').value; 
+            const desc = document.getElementById('todoDesc').value; 
+            const prio = document.getElementById('todoPriority').value; 
+            const status = document.getElementById('todoStatus').value;
+            
             if(!txt) return window.notify("Titel fehlt!", "error");
             
             let mockTodos = JSON.parse(localStorage.getItem('republica_todos')) || [];
@@ -534,7 +940,10 @@
             if(window.editingTodoId) {
                 const index = mockTodos.findIndex(t => t.id === window.editingTodoId);
                 if(index !== -1) {
-                    mockTodos[index].task = txt; mockTodos[index].description = desc; mockTodos[index].priority = prio; mockTodos[index].status = status;
+                    mockTodos[index].task = txt; 
+                    mockTodos[index].description = desc; 
+                    mockTodos[index].priority = prio; 
+                    mockTodos[index].status = status;
                 }
                 window.notify("Aufgabe aktualisiert", "success");
             } else {
@@ -548,15 +957,35 @@
             window.loadTodos();
         };
 
+        // Füllt Formular zum Editieren
         window.editTodo = (id) => {
-            const d = window.todoDataCache[id]; if(!d) return; window.editingTodoId = id;
-            document.getElementById('todoInput').value = d.task || ''; document.getElementById('todoDesc').value = d.description || ''; document.getElementById('todoPriority').value = d.priority || 'medium'; document.getElementById('todoStatus').value = d.status || 'open';
-            document.getElementById('todoFormTitle').innerText = "AUFGABE BEARBEITEN"; document.getElementById('btn-save-todo').innerText = "ÄNDERUNGEN SPEICHERN"; document.getElementById('btn-save-todo').style.background = "var(--warning)"; document.getElementById('btn-cancel-todo').style.display = "block";
+            const d = window.todoDataCache[id]; 
+            if(!d) return; 
+            window.editingTodoId = id;
+            
+            document.getElementById('todoInput').value = d.task || ''; 
+            document.getElementById('todoDesc').value = d.description || ''; 
+            document.getElementById('todoPriority').value = d.priority || 'medium'; 
+            document.getElementById('todoStatus').value = d.status || 'open';
+            
+            document.getElementById('todoFormTitle').innerText = "AUFGABE BEARBEITEN"; 
+            document.getElementById('btn-save-todo').innerText = "ÄNDERUNGEN SPEICHERN"; 
+            document.getElementById('btn-save-todo').style.background = "var(--warning)"; 
+            document.getElementById('btn-cancel-todo').style.display = "block";
         };
 
+        // Bricht Editieren ab
         window.cancelTodoEdit = () => {
-            window.editingTodoId = null; document.getElementById('todoInput').value = ''; document.getElementById('todoDesc').value = ''; document.getElementById('todoPriority').value = 'medium'; document.getElementById('todoStatus').value = 'open';
-            document.getElementById('todoFormTitle').innerText = "NEUE AUFGABE"; document.getElementById('btn-save-todo').innerText = "SPEICHERN"; document.getElementById('btn-save-todo').style.background = "var(--neon)"; document.getElementById('btn-cancel-todo').style.display = "none";
+            window.editingTodoId = null; 
+            document.getElementById('todoInput').value = ''; 
+            document.getElementById('todoDesc').value = ''; 
+            document.getElementById('todoPriority').value = 'medium'; 
+            document.getElementById('todoStatus').value = 'open';
+            
+            document.getElementById('todoFormTitle').innerText = "NEUE AUFGABE"; 
+            document.getElementById('btn-save-todo').innerText = "SPEICHERN"; 
+            document.getElementById('btn-save-todo').style.background = "var(--neon)"; 
+            document.getElementById('btn-cancel-todo').style.display = "none";
         };
 
         window.delTodo = id => { 
